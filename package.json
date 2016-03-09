@@ -1,8 +1,21 @@
 {
-  "name": "node-express-api",
+  "name": "o-api",
   "version": "1.0.0",
   "scripts": {
     "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elrumordelaluz/oapi.git"
+  },
+  "author": {
+    "name": "Lionel",
+    "email": "elrumordelaluz@hotmail.com",
+    "url": "http://elrumordelaluz.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/elrumordelaluz/oapi/issues"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
