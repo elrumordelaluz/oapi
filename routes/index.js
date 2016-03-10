@@ -140,7 +140,7 @@ router.post('/api/add', function(req, res){
         library = req.body.library,
         type = req.body.type,
         tags = req.body.tags.split(","),
-        paths = req.body.paths,
+        paths = JSON.parse(req.body.paths),
         premium = req.body.premium;
 
     var iconObj = {
@@ -177,6 +177,125 @@ router.post('/api/add', function(req, res){
 });
 
 
+
+
+
+router.post('/api/bulk', function(req, res){
+    // console.log(req.body);
+    // var name = req.body.name,
+    //     package = req.body.package,
+    //     packageSlug = toSlug(package),
+    //     iconSlug = packageSlug + '__' + toSlug(name),
+    //     library = req.body.library,
+    //     type = req.body.type,
+    //     tags = req.body.tags.split(","),
+    //     paths = req.body.paths,
+    //     premium = req.body.premium;
+
+    // var iconObj = {
+    //   name: name,
+    //   package: package,
+    //   iconSlug: iconSlug,
+    //   packageSlug: packageSlug,
+    //   library: library,
+    //   type: type,
+    //   tags: tags,
+    //   paths: paths,
+    //   premium: premium
+    // }
+
+    var packageSlug = toSlug("Edition Stroke");
+    // var icon = new Icon(iconObj);
+    var iconsArray = [
+      {
+        paths: {
+          "name": "svg",
+          "attrs": {
+            "xmlns": "http://www.w3.org/2000/svg",
+            "viewBox": "0 0 64 64"
+          },
+          "childs": [
+            {
+              "name": "path",
+              "attrs": {
+                "fill": "none",
+                "stroke": "#202020",
+                "strokeLinejoin": "round",
+                "strokeMiterlimit": "10",
+                "d": "M4.8 4.8L27 59.2l7.5-24.6 24.7-7.7z"
+              }
+            }
+          ]
+        },
+        name: "arrow-2",
+        packageSlug: packageSlug,
+        iconSlug: packageSlug + '__' + toSlug("arrow-2"),
+        library: "The Icon Set",
+        package: "Edition Stroke",
+        type: "stroke",
+        tags: [],
+        premium: false
+      },
+      {
+        paths: {
+          "name": "svg",
+          "attrs": {
+            "xmlns": "http://www.w3.org/2000/svg",
+            "viewBox": "0 0 64 64"
+          },
+          "childs": [
+            {
+              "name": "g",
+              "attrs": {
+                "fill": "none",
+                "stroke": "#202020",
+                "strokeLinejoin": "round",
+                "strokeMiterlimit": "10"
+              },
+              "childs": [
+                {
+                  "name": "path",
+                  "attrs": {
+                    "d": "M4.5 12.5l39.2 18.2-14.9 6-5.9 14.8z"
+                  }
+                },
+                {
+                  "name": "path",
+                  "attrs": {
+                    "d": "M24.8 21.9l-4.5-9.4 39.2 18.2-14.9 6.1-5.9 14.7-7.4-15.8"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        name: "arrow-copy",
+        packageSlug: packageSlug,
+        iconSlug: packageSlug + '__' + toSlug("arrow-copy"),
+        library: "The Icon Set",
+        package: "Edition Stroke",
+        type: "stroke",
+        tags: [],
+        premium: false
+      }
+    ];
+    
+    Icon.collection.insert(iconsArray, handleInsert);
+
+    function handleInsert (err, icons) {
+      if (err) {
+        var error = { status:'ERROR', message: 'Error saving bulk Icons' };
+        return res.json(error);
+      } else {
+        var jsonData = {
+          status: 'OK',
+          icons: icons
+        }
+        console.info('%d Icons were successfully stored.', icons.length);
+        return res.json(jsonData);
+      }
+    }
+});
 
 
 
@@ -272,7 +391,7 @@ router.get('/api/icons', function(req, res){
 
 router.get('/api/package/:package', function(req, res){
   // Find all or filter by parameters 
-  Icon.find({ packageSlug: req.params.package }, function (err, data){
+  Icon.find({ packageSlug: req.params.package }, null, { sort:{ iconSlug: 1 } }, function (err, data){
     if(err || data == null){
       var error = { status: 'ERROR', message: 'Could not find Icons' };
       return res.json(error);
