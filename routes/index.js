@@ -176,8 +176,6 @@ router.post('/api/add', function(req, res){
     })  
 });
 
-var editionStrokeFile = require('../edition-stroke.json');
-var editionFillFile = require('../edition-fill.json');
 
 function adaptBulkIcons (file) {
   return file.icons.map(function (icon) {
@@ -202,7 +200,7 @@ function adaptBulkIcons (file) {
 }
 
 router.post('/api/bulk', function(req, res){
-  var iconsArray = adaptBulkIcons(editionFillFile);
+  // var iconsArray = adaptBulkIcons(editionFillFile);
   Icon.collection.insert(iconsArray, handleInsert);
   function handleInsert (err, icons) {
     if (err) {
