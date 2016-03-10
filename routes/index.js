@@ -20,7 +20,7 @@ var toSlug = function (text) {
 router.get('/', function(req, res) {
   
   var jsonData = {
-    'name': 'node-express-api-boilerplate',
+    'name': 'orion-api',
     'api-status':'OK'
   }
 
@@ -74,7 +74,7 @@ router.post('/api/authenticate', function(req, res) {
 
         // if user is found and password is right create a token
         var token = jwt.sign({ name: user.name, password: user.password }, process.env.SECRET, {
-          expiresInMinutes: 525600 // 1440 // expires in 24 hours
+          expiresIn: '7d'
         });
 
         // return the information including token as JSON
