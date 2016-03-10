@@ -1,30 +1,23 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken');
 
-var jwt    = require('jsonwebtoken');
-
-// our db model
-var Animal = require("../models/model.js");
 var User = require("../models/user.js");
-
 var Icon = require('../models/icon');
-var Package = require('../models/package');
 
 var toSlug = function (text) { 
   return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-')
 }
 
 
-
 router.get('/config', function(req, res) {
-  // create a sample user
   var nick = new User({ 
-    name: 'Nick Cerminara', 
-    password: 'password',
+    name: 'Lionel T', 
+    password: 'elrumordelaluz',
     admin: true 
   });
-  // save the sample user
+  
   nick.save(function(err) {
     if (err) throw err;
     console.log('User saved successfully');
@@ -32,17 +25,13 @@ router.get('/config', function(req, res) {
   });
 });
 
-// route to return all users (GET http://localhost:8080/api/users)
 router.get('/api/users', function(req, res) {
-  User.find({}, function(err, users) {
+  User.find({}, 'name', function(err, users) {
     res.json(users);
   });
 });
 
-// route to authenticate a user (POST http://localhost:8080/api/authenticate)
 router.post('/api/authenticate', function(req, res) {
-
-  // find the user
   User.findOne({
     name: req.body.name
   }, function(err, user) {
@@ -58,10 +47,9 @@ router.post('/api/authenticate', function(req, res) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
 
-        // if user is found and password is right
-        // create a token
-        var token = jwt.sign(user, 'ilovescotchyscotch', { // TODO: communicate with ENV (app.get('superSecret'))
-          expiresInMinutes: 1440 // expires in 24 hours
+        // if user is found and password is right create a token
+        var token = jwt.sign({ name: user.name, password: user.password }, process.env.SECRET, {
+          expiresInMinutes: 525600 // 1440 // expires in 24 hours
         });
 
         // return the information including token as JSON
@@ -88,7 +76,7 @@ router.use(function(req, res, next) {
   if (token) {
 
     // verifies secret and checks exp
-    jwt.verify(token, 'ilovescotchyscotch', function(err, decoded) {      
+    jwt.verify(token, process.env.SECRET, function(err, decoded) {      
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });    
       } else {
@@ -414,8 +402,8 @@ router.post('/api/update/:id', function(req, res){
 
 /**
  * GET '/api/delete/:id'
- * Receives a GET request specifying the animal to delete
- * @param  {String} req.param('id'). The animalId
+ * Receives a GET request specifying the Icon to delete
+ * @param  {String} req.param('id'). The icon ID
  * @return {Object} JSON
  */
 
@@ -432,7 +420,7 @@ router.get('/api/delete/:id', function(req, res){
     // otherwise, respond back with success
     var jsonData = {
       status: 'OK',
-      message: 'Successfully deleted id ' + requestedId
+      message: 'Icon successfully deleted (id: ' + requestedId + ')'
     }
 
     res.json(jsonData);
@@ -440,15 +428,6 @@ router.get('/api/delete/:id', function(req, res){
   })
 
 })
-
-
-/////////////////////
-/////////////////////
-/////////////////////
-/////////////////////
-
-
-
 
 
 module.exports = router;
