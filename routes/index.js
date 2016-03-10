@@ -365,7 +365,7 @@ router.get('/api/search/:query', function(req, res){
       icons: data
     } 
 
-    if (noPacks.length > 0) {
+    if (noPacks && noPacks.length > 0) {
       jsonData.noPacks = noPacks
     }
 
