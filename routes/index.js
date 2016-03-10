@@ -176,125 +176,47 @@ router.post('/api/add', function(req, res){
     })  
 });
 
+var editionStrokeFile = require('../edition-stroke.json');
+var editionFillFile = require('../edition-fill.json');
 
+function adaptBulkIcons (file) {
+  return file.icons.map(function (icon) {
+    // Transform `title` into `name`
+    icon.name = icon.title
 
+    // Create slugs
+    var packageSlug = toSlug(icon.package);
+    icon.packageSlug = packageSlug;
+    icon.iconSlug = packageSlug + '__' + toSlug(icon.title);
 
+    // Aditional params
+    icon.premium = false;
+    icon.tags = [];
+
+    // Remove `title`
+    delete icon.title;
+    // console.log(icon)
+
+    return icon;
+  })
+}
 
 router.post('/api/bulk', function(req, res){
-    // console.log(req.body);
-    // var name = req.body.name,
-    //     package = req.body.package,
-    //     packageSlug = toSlug(package),
-    //     iconSlug = packageSlug + '__' + toSlug(name),
-    //     library = req.body.library,
-    //     type = req.body.type,
-    //     tags = req.body.tags.split(","),
-    //     paths = req.body.paths,
-    //     premium = req.body.premium;
-
-    // var iconObj = {
-    //   name: name,
-    //   package: package,
-    //   iconSlug: iconSlug,
-    //   packageSlug: packageSlug,
-    //   library: library,
-    //   type: type,
-    //   tags: tags,
-    //   paths: paths,
-    //   premium: premium
-    // }
-
-    var packageSlug = toSlug("Edition Stroke");
-    // var icon = new Icon(iconObj);
-    var iconsArray = [
-      {
-        paths: {
-          "name": "svg",
-          "attrs": {
-            "xmlns": "http://www.w3.org/2000/svg",
-            "viewBox": "0 0 64 64"
-          },
-          "childs": [
-            {
-              "name": "path",
-              "attrs": {
-                "fill": "none",
-                "stroke": "#202020",
-                "strokeLinejoin": "round",
-                "strokeMiterlimit": "10",
-                "d": "M4.8 4.8L27 59.2l7.5-24.6 24.7-7.7z"
-              }
-            }
-          ]
-        },
-        name: "arrow-2",
-        packageSlug: packageSlug,
-        iconSlug: packageSlug + '__' + toSlug("arrow-2"),
-        library: "The Icon Set",
-        package: "Edition Stroke",
-        type: "stroke",
-        tags: [],
-        premium: false
-      },
-      {
-        paths: {
-          "name": "svg",
-          "attrs": {
-            "xmlns": "http://www.w3.org/2000/svg",
-            "viewBox": "0 0 64 64"
-          },
-          "childs": [
-            {
-              "name": "g",
-              "attrs": {
-                "fill": "none",
-                "stroke": "#202020",
-                "strokeLinejoin": "round",
-                "strokeMiterlimit": "10"
-              },
-              "childs": [
-                {
-                  "name": "path",
-                  "attrs": {
-                    "d": "M4.5 12.5l39.2 18.2-14.9 6-5.9 14.8z"
-                  }
-                },
-                {
-                  "name": "path",
-                  "attrs": {
-                    "d": "M24.8 21.9l-4.5-9.4 39.2 18.2-14.9 6.1-5.9 14.7-7.4-15.8"
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        name: "arrow-copy",
-        packageSlug: packageSlug,
-        iconSlug: packageSlug + '__' + toSlug("arrow-copy"),
-        library: "The Icon Set",
-        package: "Edition Stroke",
-        type: "stroke",
-        tags: [],
-        premium: false
+  var iconsArray = adaptBulkIcons(editionFillFile);
+  Icon.collection.insert(iconsArray, handleInsert);
+  function handleInsert (err, icons) {
+    if (err) {
+      var error = { status:'ERROR', message: 'Error saving bulk Icons' };
+      return res.json(error);
+    } else {
+      var jsonData = {
+        status: 'OK',
+        icons: icons
       }
-    ];
-    
-    Icon.collection.insert(iconsArray, handleInsert);
-
-    function handleInsert (err, icons) {
-      if (err) {
-        var error = { status:'ERROR', message: 'Error saving bulk Icons' };
-        return res.json(error);
-      } else {
-        var jsonData = {
-          status: 'OK',
-          icons: icons
-        }
-        console.info('%d Icons were successfully stored.', icons.length);
-        return res.json(jsonData);
-      }
+      console.info('%d Icons were successfully stored.', icons.length);
+      return res.json(jsonData);
     }
+  }
 });
 
 
