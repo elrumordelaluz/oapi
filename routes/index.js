@@ -11,6 +11,31 @@ var toSlug = function (text) {
 }
 
 
+/**
+ * GET '/'
+ * Default home route. Just relays a success message back.
+ * @param  {Object} req
+ * @return {Object} json
+ */
+router.get('/', function(req, res) {
+  
+  var jsonData = {
+    'name': 'node-express-api-boilerplate',
+    'api-status':'OK'
+  }
+
+  // respond with json data
+  res.json(jsonData)
+});
+
+// simple route to show an HTML page
+router.get('/sample-page', function(req,res){
+  res.render('sample.html')
+})
+
+
+
+
 router.get('/config', function(req, res) {
   var nick = new User({ 
     name: 'Lionel T', 
@@ -97,30 +122,6 @@ router.use(function(req, res, next) {
     
   }
 });
-
-/**
- * GET '/'
- * Default home route. Just relays a success message back.
- * @param  {Object} req
- * @return {Object} json
- */
-router.get('/', function(req, res) {
-  
-  var jsonData = {
-  	'name': 'node-express-api-boilerplate',
-  	'api-status':'OK'
-  }
-
-  // respond with json data
-  res.json(jsonData)
-});
-
-// simple route to show an HTML page
-router.get('/sample-page', function(req,res){
-  res.render('sample.html')
-})
-
-
 
 
 // /**
