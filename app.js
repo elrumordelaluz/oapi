@@ -17,25 +17,21 @@ if (app.get("env") === "development") {
 // connect to database
 app.db = mongoose.connect(process.env.MONGOLAB_URI);
 
-// view engine setup - this app uses Hogan-Express
-// https://github.com/vol4ok/hogan-express
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'html');
-app.set('layout','layout');
-app.engine('html', require('hogan-express'));;
+app.set('view engine', 'jsx');
+app.engine('jsx', require('express-react-views').createEngine());
 
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
-    // intercept OPTIONS method
-    if ('OPTIONS' == req.method) {
-      res.send(200);
-    }
-    else {
-      next();
-    }
+  // intercept OPTIONS method
+  if ('OPTIONS' == req.method) {
+    res.send(200);
+  } else {
+    next();
+  }
 };
 
 app.use(allowCrossDomain)
@@ -46,9 +42,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// our routes will be contained in routes/index.js
-var routes = require('./routes/index');
-app.use('/', routes);
+// API Routes
+var apiV1 = require('./routes/api/v1');
+app.use('/api/v1', apiV1);
+
+// Other Routes
+var defaultRoutes = require('./routes/index');
+app.use('/', defaultRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
