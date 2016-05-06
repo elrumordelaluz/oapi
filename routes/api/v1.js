@@ -10,87 +10,6 @@ var toSlug = function (text) {
   return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-')
 }
 
-
-/**
- * GET '/'
- * Default home route. Just relays a success message back.
- * @param  {Object} req
- * @return {Object} json
- */
-router.get('/', function(req, res) {
-
-  var jsonData = {
-    'name': 'orion-api',
-    'api-status':'OK'
-  }
-
-  // respond with json data
-  res.json(jsonData)
-});
-
-// simple route to show an HTML page
-router.get('/sample-page', function(req,res){
-  res.render('sample.html')
-})
-
-
-
-
-router.get('/config', function(req, res) {
-  var nick = new User({
-    name: 'Lionel T',
-    password: 'elrumordelaluz',
-    admin: true
-  });
-
-  nick.save(function(err) {
-    if (err) throw err;
-    console.log('User saved successfully');
-    res.json({ success: true });
-  });
-});
-
-router.get('/users', function(req, res) {
-  User.find({}, 'name', function(err, users) {
-    res.json(users);
-  });
-});
-
-router.post('/authenticate', function(req, res) {
-  User.findOne({
-    name: req.body.name
-  }, function(err, user) {
-
-    if (err) throw err;
-
-    if (!user) {
-      res.json({ success: false, message: 'Authentication failed. User not found.' });
-    } else if (user) {
-
-      // check if password matches
-      if (user.password != req.body.password) {
-        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-      } else {
-
-        // if user is found and password is right create a token
-        var token = jwt.sign({ name: user.name, password: user.password }, process.env.SECRET, {
-          expiresIn: '30d'
-        });
-
-        // return the information including token as JSON
-        res.json({
-          success: true,
-          message: 'Enjoy your token!',
-          token: token
-        });
-      }
-
-    }
-
-  });
-});
-
-
 // route middleware to verify a token
 router.use(function(req, res, next) {
 
@@ -99,7 +18,6 @@ router.use(function(req, res, next) {
 
   // decode token
   if (token) {
-
     // verifies secret and checks exp
     jwt.verify(token, process.env.SECRET, function(err, decoded) {
       if (err) {
