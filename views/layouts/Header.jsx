@@ -4,17 +4,17 @@ const Header = (props) => {
   const navigation = props.currentUser ?
     (
       <ul className="nav navbar-nav navbar-right">
-        <li><a href="/edit">Hello, {props.currentUser.name} </a></li>
+        <li><a>Hello, {props.currentUser.username} {props.currentUser.admin && "(admin)" }</a></li>
         <li><a href="/logout">Log out</a></li>
       </ul>
     ) : (
       <ul className="nav navbar-nav navbar-right">
-        <li><a href="/login">Log in</a></li>
         <li><a href="/signup">Sign up</a></li>
+        <li><a href="/login">Log in</a></li>
       </ul>
     );
 
-  const renderAlert = (type, msg) => <div className={`alert alert-${type}`} role="alert">{msg}</div>;
+  const renderAlert = (type, msg) => <div key={msg} className={`alert alert-${type}`} role="alert">{msg}</div>;
 
   return (
     <div>
