@@ -37,7 +37,7 @@ const Index = (props) => {
           <pre>
             <code>{props.currentUser.token}</code>
           </pre>
-        </div> 
+        </div>
       }
 
     </DefaultLayout>
