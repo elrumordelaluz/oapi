@@ -144,27 +144,8 @@ router.post('/bulk', function(req, res){
 //  * @return {Object} JSON
 //  */
 
-router.get('/icon/', function(req, res){
-
-  var requestedId = req.params.id;
+router.get('/icon/:slug', function(req, res){
   var requestedSlug = req.params.slug;
-
-  console.log(req.query)
-  if (requestedId) {
-
-    Icon.findById(requestedId, function (err, data){
-      if(err || data == null){
-        var error = {status:'ERROR', message: 'Could not find that Icon slug'};
-         return res.json(error);
-      }
-      var jsonData = {
-        status: 'OK',
-        icon: data
-      }
-      return res.json(jsonData);
-    })
-
-  } else if (requestedSlug) {
 
     Icon.findOne({ iconSlug: requestedSlug }, function (err, data){
       if(err || data == null){
@@ -177,13 +158,6 @@ router.get('/icon/', function(req, res){
       }
       return res.json(jsonData);
     })
-
-  } else {
-
-    var error = {status:'ERROR', message: 'Need to specify at least a param'};
-    return res.json(error);
-
-  }
 
 })
 
