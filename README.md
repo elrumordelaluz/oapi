@@ -1,1 +1,3 @@
 # oAPI
+
+GET / POST 
