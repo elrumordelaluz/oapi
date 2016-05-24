@@ -90,6 +90,10 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
   // next();
 });
 
+router.get('/icons', ensureAuthenticated, function(req, res) {
+  res.render('Icons', { title: `Icons :: ${title}` });
+});
+
 router.use(function(req, res) {
   res.status(404).render('NotFound', { title });
 });
