@@ -4,6 +4,8 @@ var User = require('../models/user');
 var jwt = require('jsonwebtoken');
 var ms = require('ms');
 
+var Icon = require('../models/icon');
+
 var router = express.Router();
 
 const title = 'Orion API';
@@ -93,7 +95,49 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
 });
 
 router.get('/icons', ensureAuthenticated, function(req, res) {
-  res.render('Icons', { title: `Icons :: ${title}` });
+  Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){
+    if(err || data === null){
+      var error = { status: 'ERROR', message: 'Could not find Icons' };
+      return res.json(error);
+    }
+
+    var jsonData = {
+      status: 'OK',
+      package: req.params.package,
+      icons: data
+    }
+
+    res.render('Icons', { title: `Icons :: ${title}`, icons: jsonData.icons });
+  });
+});
+
+router.get('/pack', ensureAuthenticated, function(req, res, next) {
+  Icon.find({}, 'packageSlug', function(err, data) {
+    if (err || data === null){
+      var err = { status: 'ERROR', message: 'Could not find Icons' };
+      next(err);
+    }
+    const packs = new Set(data.map(icn => icn.packageSlug));
+
+    res.render('Icons', { title: `Icons :: ${title}`, packs: Array.from(packs) });
+  });
+});
+
+router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
+  Icon.find({ packageSlug: req.params.pack }, null, { sort:{ iconSlug: 1 } }, function (err, data){
+    if (err || data === null){
+      var err = { status: 'ERROR', message: 'Could not find Icons' };
+      next(err);
+    }
+
+    if (data.length === 0) {
+      req.flash('info', 'No icons for a package called: ' + req.params.pack);
+      res.redirect('/pack');
+      return;
+    }
+
+    res.render('Icons', { title: `Icons :: ${title}`, icons: data, pack: req.params.pack });
+  });
 });
 
 router.use(function(req, res) {
