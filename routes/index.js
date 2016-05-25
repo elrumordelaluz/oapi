@@ -19,6 +19,7 @@ function ensureAuthenticated (req, res, next) {
   if (req.isAuthenticated()) {
     next();
   } else {
+    req.session.returnTo = req.session.returnTo || req.url;
     req.flash('info', 'You must be logged in to see this page.');
     res.redirect('/login');
   }
@@ -43,9 +44,10 @@ router.get('/logout', function(req, res) {
 });
 
 router.post('/login', passport.authenticate('login', {
-  successRedirect: '/',
+  // successRedirect: '/',
   failureRedirect: '/login',
-  failureFlash: true
+  failureFlash: true,
+  successReturnToOrRedirect: '/'
 }));
 
 router.post('/signup', function(req, res, next) {
