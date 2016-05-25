@@ -8,11 +8,25 @@ const Icons = (props) => {
     </li>
   ));
 
-  const renderIcons = () => props.icons.map(icon => (
+  const renderIcons = () => props.icons.map(icon => {
+    return (
     <li key={icon.iconSlug}>
       <h3>{icon.name}</h3>
+      <p>Slug: <code>{icon.iconSlug}</code></p>
+      <p>Style: <code>{icon['style']}</code></p>
+      <p>Premium: <code>{icon.premium ? 'yes' : 'no'}</code></p>
+      <p>Tags:
+        <ul>
+          {icon.tags.map(tag => <li key={tag}>{tag}</li>)}
+        </ul>
+      </p>
+      <pre>
+        <code>
+          {JSON.stringify(icon.paths, null, 2)}
+        </code>
+      </pre>
     </li>
-  ));
+  )});
 
   return (
     <DefaultLayout {...props}>

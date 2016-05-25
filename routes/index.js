@@ -111,7 +111,7 @@ router.get('/icons', ensureAuthenticated, function(req, res) {
   });
 });
 
-router.get('/pack', ensureAuthenticated, function(req, res, next) {
+router.get(['/pack', '/packs'], ensureAuthenticated, function(req, res, next) {
   Icon.find({}, 'packageSlug', function(err, data) {
     if (err || data === null){
       var err = { status: 'ERROR', message: 'Could not find Icons' };
