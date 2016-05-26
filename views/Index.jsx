@@ -40,6 +40,10 @@ const Index = (props) => {
         </div>
       }
 
+      <hr/>
+
+      <a href="/packs" className="btn btn-warning pull-right">Packs</a>
+
     </DefaultLayout>
   );
 }
