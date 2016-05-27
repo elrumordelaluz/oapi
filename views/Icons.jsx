@@ -10,16 +10,16 @@ const Icons = (props) => {
 
   const renderIcons = () => props.icons.map(icon => {
     return (
-    <li key={icon.iconSlug}>
+    <li key={icon._id}>
       <h3>{icon.name}</h3>
       <p>Slug: <code>{icon.iconSlug}</code></p>
-      <p>Style: <code>{icon['style']}</code></p>
+      <p>Style: <code>{icon.style}</code></p>
       <p>Premium: <code>{icon.premium ? 'yes' : 'no'}</code></p>
-      <p>Tags:
+      <div>Tags:
         <ul>
           {icon.tags.map(tag => <li key={tag}>{tag}</li>)}
         </ul>
-      </p>
+      </div>
       <pre>
         <code>
           {JSON.stringify(icon.paths, null, 2)}
