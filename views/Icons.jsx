@@ -28,8 +28,8 @@ const Icons = (props) => {
           </ul>
         </div>
         <div className="IconActions">
-          <a href="#0" className="btn btn-info">Edit</a>
-          <a href="#0" className="btn btn-warning">Delete</a>
+          <a href={`/icons/${icon.iconSlug}`} className="btn btn-info">Edit</a>
+          { /* <a href="#0" className="btn btn-warning">Delete</a> */ }
         </div>
       </div>
 
@@ -46,6 +46,11 @@ const Icons = (props) => {
   return (
     <DefaultLayout {...props}>
       <h1 className="ListTitle">{mainTitle}</h1>
+
+      { props.icons && <div className="EditIconPack">
+        <a href="/packs/">Packs</a>
+      </div> }
+
       <ul className="IconsList">
         { props.icons && renderIcons() }
         { props.packs && renderPacks() }

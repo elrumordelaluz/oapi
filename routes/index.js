@@ -140,6 +140,17 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
   });
 });
 
+router.get('/icons/:icon', ensureAuthenticated, function(req, res, next) {
+  Icon.findOne({ iconSlug: req.params.icon }, function(err, data) {
+    if(err || data == null){
+      var error = {status:'ERROR', message: 'Could not find that Icon ID'};
+      next(err);
+    }
+
+    res.render('Icon', { title: `Icon :: ${title}`, icon: data });
+  });
+});
+
 router.use(function(req, res) {
   res.status(404).render('NotFound', { title });
 });

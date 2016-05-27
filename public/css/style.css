@@ -2,13 +2,14 @@
 /* Custom CSS */
 /**************/
 
-.ListTitle {
+.ListTitle,
+.EditIconTitle  {
   text-align: center;
   text-transform: uppercase;
   font-weight: 100;
-  margin-bottom: 3em;
   border-bottom: 1px solid #f6f6f6;
 }
+
 
 .IconsList {
   list-style: none;
@@ -26,7 +27,8 @@
   flex: 0 0 20%;
 }
 
-.IconDetails {
+.IconDetails,
+.EditIconDetails {
   padding: 0 1em;
   flex: 0 0 30%;
   font-weight: 100;
@@ -53,6 +55,55 @@
   }
     .IconActions .btn { margin-right: .5em; }
 
-.IconCode {
+.IconCode,
+.EditIconCode {
   flex: 1;
+}
+
+.EditIconTitle {
+  margin-bottom: 1em;
+}
+
+  .EditIconTitle input {
+    font-size: 3em;
+    border: 0;
+    text-align: center;
+  }
+
+.EditIconPack {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.EditIconActions {
+  text-align: center;
+  margin-bottom: 2em;
+}
+  .EditIconActions .btn {
+    margin-right: .3em;
+  }
+
+.EditIconDetails label {
+  font-weight: 100;
+}
+
+.EditContainer {
+  display: flex;
+  align-items: baseline;
+  justify-content:space-between;
+}
+
+.EditIconDetails input,
+.EditIconDetails select {
+  margin-left: .5em;
+  padding: .3em .5em;
+  width: 100%;
+}
+
+.EditIconCode {
+  white-space: nowrap;
+  overflow: auto;
+  font-family: monospace;
+  padding: 1em;
+  border: 1px solid #f7f7f7;
 }
