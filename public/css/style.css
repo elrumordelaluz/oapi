@@ -48,6 +48,11 @@
       margin-left: .2em;
     }
 
+  .IconActions {
+    margin-top: 1em;
+  }
+    .IconActions .btn { margin-right: .5em; }
+
 .IconCode {
   flex: 1;
 }

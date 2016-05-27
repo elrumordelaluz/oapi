@@ -27,6 +27,10 @@ const Icons = (props) => {
             {icon.tags.map(tag => <li key={tag}><code>{tag}</code></li>)}
           </ul>
         </div>
+        <div className="IconActions">
+          <a href="#0" className="btn btn-info">Edit</a>
+          <a href="#0" className="btn btn-warning">Delete</a>
+        </div>
       </div>
 
       <pre className="IconCode">
