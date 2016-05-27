@@ -1,3 +1,53 @@
 /**************/
 /* Custom CSS */
 /**************/
+
+.ListTitle {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 100;
+  margin-bottom: 3em;
+  border-bottom: 1px solid #f6f6f6;
+}
+
+.IconsList {
+  list-style: none;
+}
+
+.Icon {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 3em;
+}
+
+
+.IconPreview {
+  border: 1px solid #f6f6f6;
+  flex: 0 0 20%;
+}
+
+.IconDetails {
+  padding: 0 1em;
+  flex: 0 0 30%;
+  font-weight: 100;
+}
+
+  .IconTitle {
+    font-weight: 100;
+    margin-top: 0;
+  }
+
+  .IconTags {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+  }
+
+    .IconTags li {
+      display: inline-block;
+      margin-left: .2em;
+    }
+
+.IconCode {
+  flex: 1;
+}

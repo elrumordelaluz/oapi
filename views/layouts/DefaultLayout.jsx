@@ -10,6 +10,7 @@ class DefaultLayout extends Component {
           <meta charSet="utf-8" />
           <title>{ this.props.title }</title>
           <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+          <link rel="stylesheet" href="/css/style.css"/>
         </head>
         <body>
           <Header {...this.props} />

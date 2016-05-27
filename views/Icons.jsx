@@ -1,5 +1,6 @@
 import React from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
+import Element from './Element';
 
 const Icons = (props) => {
   const renderPacks = () => props.packs.map(pack => (
@@ -10,17 +11,25 @@ const Icons = (props) => {
 
   const renderIcons = () => props.icons.map(icon => {
     return (
-    <li key={icon._id}>
-      <h3>{icon.name}</h3>
-      <p>Slug: <code>{icon.iconSlug}</code></p>
-      <p>Style: <code>{icon.style}</code></p>
-      <p>Premium: <code>{icon.premium ? 'yes' : 'no'}</code></p>
-      <div>Tags:
-        <ul>
-          {icon.tags.map(tag => <li key={tag}>{tag}</li>)}
-        </ul>
+    <li key={icon._id} className="Icon">
+
+      <div className="IconPreview">
+        <Element obj={icon.paths} />
       </div>
-      <pre>
+
+      <div className="IconDetails">
+        <h3 className="IconTitle">{icon.name}</h3>
+        <p>Slug: <code>{icon.iconSlug}</code></p>
+        <p>Style: <code>{icon.style}</code></p>
+        <p>Premium: <code>{icon.premium ? 'yes' : 'no'}</code></p>
+        <div>Tags:
+          <ul className="IconTags">
+            {icon.tags.map(tag => <li key={tag}><code>{tag}</code></li>)}
+          </ul>
+        </div>
+      </div>
+
+      <pre className="IconCode">
         <code>
           {JSON.stringify(icon.paths, null, 2)}
         </code>
@@ -28,11 +37,12 @@ const Icons = (props) => {
     </li>
   )});
 
+  const mainTitle = props.icons ? props.pack : 'Packs';
+
   return (
     <DefaultLayout {...props}>
-      <h1>{props.icons && props.pack && `${props.pack} icons`}</h1>
-      <h1>{props.packs && 'Packs'}</h1>
-      <ul>
+      <h1 className="ListTitle">{mainTitle}</h1>
+      <ul className="IconsList">
         { props.icons && renderIcons() }
         { props.packs && renderPacks() }
       </ul>
