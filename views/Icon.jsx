@@ -30,7 +30,7 @@ const Icon = (props) => {
 
           <label className="EditContainer">
             Slug
-            <input type="text" value={icon.iconSlug} />
+            <input type="text" value={icon.iconSlug} disabled />
           </label>
 
           <div className="EditContainer">
