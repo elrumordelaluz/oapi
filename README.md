@@ -1,3 +1,5 @@
 # oAPI
 
-GET / POST 
+GET  
+
+wip: UI / POST / batch
