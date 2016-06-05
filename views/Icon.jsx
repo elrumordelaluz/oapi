@@ -21,42 +21,44 @@ const Icon = (props) => {
         <a href="#0" className="btn btn-danger">Delete</a>
       </div>
 
-      <div className="Icon">
-        <div className="IconPreview">
-          <Element obj={icon.paths} />
-        </div>
-
-        <div className="EditIconDetails">
-
-          <label className="EditContainer">
-            Slug
-            <input type="text" value={icon.iconSlug} disabled />
-          </label>
-
-          <div className="EditContainer">
-            Style:
-            <select value={icon.style}>
-              <option value="stroke">Stroke</option>
-              <option value="fill">Fill</option>
-            </select>
+      <form action="/edit" method="post">
+        <div className="Icon">
+          <div className="IconPreview">
+            <Element obj={icon.paths} />
           </div>
 
-          <label className="EditContainer">
-            Premium
-            <input type="checkbox" checked={icon.premium ? true : false} />
-          </label>
+          <div className="EditIconDetails">
 
-          <label className="EditContainer">
-            Tags
-            <input type="text" value={tags} />
-          </label>
+            <label className="EditContainer">
+              Slug
+              <input type="text" value={icon.iconSlug} disabled />
+            </label>
 
+            <div className="EditContainer">
+              Style:
+              <select value={icon.style}>
+                <option value="stroke">Stroke</option>
+                <option value="fill">Fill</option>
+              </select>
+            </div>
+
+            <label className="EditContainer">
+              Premium
+              <input type="checkbox" checked={icon.premium ? true : false} />
+            </label>
+
+            <label className="EditContainer">
+              Tags
+              <input type="text" value={tags} />
+            </label>
+
+          </div>
+
+          <textarea rows="20" className="EditIconCode" defaultValue={JSON.stringify(icon.paths, null, 4)} />
         </div>
 
-        <textarea rows="20" className="EditIconCode">
-            {JSON.stringify(icon.paths, null, 4)}
-        </textarea>
-      </div>
+        <button className="btn btn-info">Save</button>
+      </form>
 
     </DefaultLayout>
   );
