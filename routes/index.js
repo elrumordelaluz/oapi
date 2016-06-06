@@ -154,14 +154,26 @@ router.get('/edit/:icon', ensureAuthenticated, function(req, res, next) {
 router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   const requestedIcon = req.params.icon;
   var dataToUpdate = {};
+
+  if (req.body.iconName) {
+    dataToUpdate['name'] = req.body.iconName;
+  }
+
   if (req.body.iconStyle) {
     dataToUpdate['style'] = req.body.iconStyle;
   }
+
   if (req.body.iconPremium) {
     dataToUpdate['premium'] = req.body.iconPremium;
   }
 
-  console.log('the data to update is ' + JSON.stringify(dataToUpdate));
+  if (req.body.iconTags) {
+    var tags = req.body.iconTags.split(",");
+    var cleanTags = tags.map(tag => tag.trim());
+    dataToUpdate['tags'] = cleanTags;
+  }
+
+  // console.log('the data to update is ' + JSON.stringify(dataToUpdate));
 
   Icon.findOneAndUpdate({ iconSlug: requestedIcon}, dataToUpdate, { new: true } , function(err,data){
     // if err saving, respond back with error
@@ -170,10 +182,13 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
       return res.json(error);
     }
 
-    console.log('updated the Icon!', data);
+    console.log('Icon updated!!');
 
-    return res.render('EditIcon', { title: `Icon :: ${title}`, icon: data });
-
+    res.render('EditIcon', {
+      title: `Icon :: ${title}`,
+      icon: data,
+      infos: ['Icon updated successfully!']
+    });
   })
 });
 

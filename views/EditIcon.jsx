@@ -7,22 +7,21 @@ const EditIcon = (props) => {
   const tags = icon.tags.join(", ");
   return (
     <DefaultLayout {...props}>
-      <div className="EditIconTitle">
-        <input type="text" value={icon.name} />
-      </div>
-
-      <div className="EditIconPack">
-        <a href={`/pack/${icon.packageSlug}`}>{icon.package}</a>
-      </div>
-
-    <div className="EditIconActions">
-        <a href="#0" className="btn btn-info">Save</a>
-        <a href="#0" className="btn btn-warning">Reset</a>
-        <a href="#0" className="btn btn-danger">Delete</a>
-      </div>
 
       <form action={`/edit/${icon.iconSlug}`} method="post">
+
+        <div className="EditIconTitle">
+          <input type="text" value={icon.name} name="iconName" />
+        </div>
+
+        <div className="EditIconPack">
+          <a href={`/pack/${icon.packageSlug}`}>{icon.package}</a>
+        </div>
+
         <div className="Icon">
+
+          <textarea rows="20" className="EditIconCode" defaultValue={JSON.stringify(icon.paths, null, 4)} />
+
           <div className="IconPreview">
             <Element obj={icon.paths} />
           </div>
@@ -60,15 +59,13 @@ const EditIcon = (props) => {
 
             <label className="EditContainer">
               Tags
-              <input type="text" value={tags} />
+              <input type="text" value={tags} name="iconTags" />
             </label>
 
           </div>
+          <button className="btn btn-info">Save</button>
 
-          <textarea rows="20" className="EditIconCode" defaultValue={JSON.stringify(icon.paths, null, 4)} />
         </div>
-
-        <button className="btn btn-info">Save</button>
       </form>
 
     </DefaultLayout>
