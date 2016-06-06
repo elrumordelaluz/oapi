@@ -59,7 +59,7 @@ const EditIcon = (props) => {
 
             <label className="EditContainer">
               Tags
-              <input type="text" value={tags} name="iconTags" />
+              <input type="text" value={tags} name="iconTags" data-role="tagsinput" />
             </label>
 
           </div>
