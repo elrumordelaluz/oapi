@@ -18,13 +18,13 @@ router.use(function(req, res, next) {
 });
 
 function ensureAuthenticated (req, res, next) {
-  // if (req.isAuthenticated()) {
+  if (req.isAuthenticated()) {
     next();
-  // } else {
-  //   req.session.returnTo = req.session.returnTo || req.url;
-  //   req.flash('info', 'You must be logged in to see this page.');
-  //   res.redirect('/login');
-  // }
+  } else {
+    req.session.returnTo = req.session.returnTo || req.url;
+    req.flash('info', 'You must be logged in to see this page.');
+    res.redirect('/login');
+  }
 }
 
 router.get('/', function(req, res, next) {
