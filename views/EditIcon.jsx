@@ -36,16 +36,27 @@ const EditIcon = (props) => {
 
             <div className="EditContainer">
               Style:
-              <select value={icon.style}>
+              <select value={icon.style} name="iconStyle" >
                 <option value="stroke">Stroke</option>
                 <option value="fill">Fill</option>
               </select>
             </div>
 
-            <label className="EditContainer">
+            <div className="EditContainer">
               Premium
-              <input type="checkbox" checked={icon.premium ? true : false} />
-            </label>
+              <div>
+                <label>
+                  Yes
+                  <input type="radio" checked={icon.premium} value="true" name="iconPremium" />
+                </label>
+                <label>
+                  No
+                  <input type="radio" checked={!icon.premium} value="false" name="iconPremium" />
+                </label>
+              </div>
+            </div>
+
+
 
             <label className="EditContainer">
               Tags

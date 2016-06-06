@@ -18,13 +18,13 @@ router.use(function(req, res, next) {
 });
 
 function ensureAuthenticated (req, res, next) {
-  if (req.isAuthenticated()) {
+  // if (req.isAuthenticated()) {
     next();
-  } else {
-    req.session.returnTo = req.session.returnTo || req.url;
-    req.flash('info', 'You must be logged in to see this page.');
-    res.redirect('/login');
-  }
+  // } else {
+  //   req.session.returnTo = req.session.returnTo || req.url;
+  //   req.flash('info', 'You must be logged in to see this page.');
+  //   res.redirect('/login');
+  // }
 }
 
 router.get('/', function(req, res, next) {
@@ -140,15 +140,41 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
   });
 });
 
-router.get('/icons/:icon', ensureAuthenticated, function(req, res, next) {
+router.get('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   Icon.findOne({ iconSlug: req.params.icon }, function(err, data) {
     if(err || data == null){
       var error = {status:'ERROR', message: 'Could not find that Icon ID'};
       next(err);
     }
 
-    res.render('Icon', { title: `Icon :: ${title}`, icon: data });
+    res.render('EditIcon', { title: `Icon :: ${title}`, icon: data });
   });
+});
+
+router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
+  const requestedIcon = req.params.icon;
+  var dataToUpdate = {};
+  if (req.body.iconStyle) {
+    dataToUpdate['style'] = req.body.iconStyle;
+  }
+  if (req.body.iconPremium) {
+    dataToUpdate['premium'] = req.body.iconPremium;
+  }
+
+  console.log('the data to update is ' + JSON.stringify(dataToUpdate));
+
+  Icon.findOneAndUpdate({ iconSlug: requestedIcon}, dataToUpdate, { new: true } , function(err,data){
+    // if err saving, respond back with error
+    if (err){
+      var error = {status:'ERROR', message: 'Error updating animal'};
+      return res.json(error);
+    }
+
+    console.log('updated the Icon!', data);
+
+    return res.render('EditIcon', { title: `Icon :: ${title}`, icon: data });
+
+  })
 });
 
 router.use(function(req, res) {
