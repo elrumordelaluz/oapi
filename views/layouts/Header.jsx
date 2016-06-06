@@ -14,7 +14,14 @@ const Header = (props) => {
       </ul>
     );
 
-  const renderAlert = (type, msg) => <div key={msg} className={`alert alert-${type}`} role="alert">{msg}</div>;
+  const renderAlert = (type, msg) => (
+    <div key={msg} className={`alert alert-${type}`} role="alert">
+      {msg}
+      <button type="button" className="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  );
 
   return (
     <div>
