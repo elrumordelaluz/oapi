@@ -2,7 +2,7 @@ import React from 'react';
 import DefaultLayout from './layouts/DefaultLayout';
 import Element from './Element';
 
-const Icon = (props) => {
+const EditIcon = (props) => {
   const { icon } = props;
   const tags = icon.tags.join(", ");
   return (
@@ -21,7 +21,7 @@ const Icon = (props) => {
         <a href="#0" className="btn btn-danger">Delete</a>
       </div>
 
-      <form action="/edit" method="post">
+      <form action={`/edit/${icon.iconSlug}`} method="post">
         <div className="Icon">
           <div className="IconPreview">
             <Element obj={icon.paths} />
@@ -64,4 +64,4 @@ const Icon = (props) => {
   );
 }
 
-module.exports = Icon;
+module.exports = EditIcon;

@@ -28,7 +28,7 @@ const Icons = (props) => {
           </ul>
         </div>
         <div className="IconActions">
-          <a href={`/icons/${icon.iconSlug}`} className="btn btn-info">Edit</a>
+          <a href={`/edit/${icon.iconSlug}`} className="btn btn-info">Edit</a>
           { /* <a href="#0" className="btn btn-warning">Delete</a> */ }
         </div>
       </div>
