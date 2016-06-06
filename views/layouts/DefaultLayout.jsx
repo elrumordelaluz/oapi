@@ -10,6 +10,7 @@ class DefaultLayout extends Component {
           <meta charSet="utf-8" />
           <title>{ this.props.title }</title>
           <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+          <link rel="stylesheet" href="https://cdn.rawgit.com/bootstrap-tagsinput/bootstrap-tagsinput/master/dist/bootstrap-tagsinput.css"/>
           <link rel="stylesheet" href="/css/style.css"/>
         </head>
         <body>
@@ -19,6 +20,7 @@ class DefaultLayout extends Component {
           </Main>
           <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
         </body>
       </html>
     );
