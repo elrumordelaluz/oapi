@@ -43,6 +43,7 @@ const Index = (props) => {
       <hr/>
 
       <a href="/packs" className="btn btn-warning pull-right">Packs</a>
+      <a href="/upload" className="btn btn-info">Upload Icon</a>
 
     </DefaultLayout>
   );

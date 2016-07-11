@@ -4,11 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var autoReap  = require('multer-autoreap');
 var session = require('express-session');
 var flash = require('connect-flash');
 var passport = require('passport');
 var mongoose = require('mongoose');
 var env = require('node-env-file');
+
+mongoose.Promise = global.Promise;
 
 var app = express();
 
@@ -47,6 +50,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(autoReap);
 
 app.use(session({
   secret: "TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX",

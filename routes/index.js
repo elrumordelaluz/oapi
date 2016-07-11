@@ -2,11 +2,16 @@ var express = require('express');
 var passport = require('passport');
 var User = require('../models/user');
 var jwt = require('jsonwebtoken');
-var ms = require('ms');
+var multer  = require('multer');
+
+const svgson = require('svgson');
+const fs = require('fs');
 
 var Icon = require('../models/icon');
 
 var router = express.Router();
+
+var h = require('../helpers/index');
 
 const title = 'Orion API';
 
@@ -93,6 +98,41 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
   });
   // next();
 });
+
+
+
+router.get('/upload', function(req, res, next) {
+  res.render('Upload', { title });
+});
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+var upload = multer({ storage: storage })
+  
+router.post('/upload', upload.single('iconFile'), function(req, res, next) {
+  Icon.count({})
+    .then(count => {
+      fs.readFile(req.file.path, 'utf-8', function(err, data) {
+        svgson(data, {
+          svgo: true,
+        }, function(result) {
+          console.log(result);
+          console.log(req.body)
+          console.log('iconSlug: ', `${h.toSlug(req.body.iconName)}_${count + 1}`)
+          res.send(result);
+        });
+      });
+    })
+});
+
+
 
 router.get('/icons', ensureAuthenticated, function(req, res) {
   Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){
