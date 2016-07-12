@@ -41,7 +41,7 @@
     "react": "^15.0.2",
     "react-dom": "^15.0.2",
     "serve-favicon": "^2.3.0",
-    "svgson": "^2.0.1"
+    "svgson": "^2.0.2"
   },
   "links": [
     "https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens",

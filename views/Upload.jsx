@@ -38,7 +38,7 @@ const Upload = (props) => {
           <h4><label htmlFor="iconPack">3. Pack</label></h4>
           <select id="iconPack" name="iconPack" className="form-control" defaultValue="0" required>
             <option disabled value="0">Select a pack...</option>
-            { packs.map(pack => <option value={toSlug(pack)} key={pack}>{pack}</option>) }
+            { packs.map(pack => <option value={pack} key={pack}>{pack}</option>) }
           </select>
         </div>
         

@@ -123,10 +123,38 @@ router.post('/upload', upload.single('iconFile'), function(req, res, next) {
         svgson(data, {
           svgo: true,
         }, function(result) {
-          console.log(result);
-          console.log(req.body)
-          console.log('iconSlug: ', `${h.toSlug(req.body.iconName)}_${count + 1}`)
-          res.send(result);
+          // 1. Got total icons number 
+          // 2. Processed newIcon with 'svgson'
+          const newIcon = {
+            name: req.body.iconName,
+            packageSlug: h.toSlug(req.body.iconPack),
+            iconSlug: `${h.toSlug(req.body.iconName)}_${count + 1}`,
+            library: req.body.iconLib,
+            package: req.body.iconPack,
+            style: req.body.iconStyle,
+            tags: req.body.iconTags.split(","),
+            premium: req.body.iconPremium ? true : false,
+            paths: result,
+          }
+
+          const icon = new Icon(newIcon);
+          
+          icon.save( function (err, data) {
+            if (err){
+              var error = { status:'ERROR', message: 'Error saving Icon' };
+              return res.json(error);
+            }
+          
+            console.log('Icon saved!', newIcon);
+          
+            // JSON data of the new Icon
+            var jsonData = {
+              status: 'OK',
+              icon: data
+            }
+            return res.json(jsonData);
+          });
+          
         });
       });
     })
