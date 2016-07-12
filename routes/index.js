@@ -101,7 +101,7 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
 
 
 
-router.get('/upload', function(req, res, next) {
+router.get('/upload', ensureAuthenticated, function(req, res, next) {
   res.render('Upload', { title });
 });
 
@@ -116,12 +116,24 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
   
-router.post('/upload', upload.single('iconFile'), function(req, res, next) {
+router.post('/upload', ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
   Icon.count({})
     .then(count => {
       fs.readFile(req.file.path, 'utf-8', function(err, data) {
         svgson(data, {
           svgo: true,
+          svgoPlugins: [
+            { removeStyleElement: true },
+            { removeAttrs: {
+                attrs: [
+                  '(stroke-width|stroke-linecap|stroke-linejoin)',
+                  'svg:id'
+                ]
+              }
+            },
+            { cleanupIDs: false },
+            { moveElemsAttrsToGroup: false },
+          ]
         }, function(result) {
           // 1. Got total icons number 
           // 2. Processed newIcon with 'svgson'
