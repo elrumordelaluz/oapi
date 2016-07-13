@@ -99,7 +99,12 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
   // next();
 });
 
-
+const countIconsInPack = (packageSlug, cb) => {
+  Icon.where({ packageSlug }).count(function (err, count) {
+    if (err) return handleError(err);
+    cb(count);
+  })
+}
 
 router.get('/admin', /*ensureAuthenticated,*/ function(req, res, next) {
   Icon.find({}, 'packageSlug', function(err, data) {
@@ -115,7 +120,7 @@ router.get('/admin', /*ensureAuthenticated,*/ function(req, res, next) {
       }) : Object.assign({}, prev, {
         [next]: 1
       });
-    }, {})
+    }, {})    
     
     res.render('Admin', { title, packs });
   });
@@ -186,7 +191,7 @@ router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('i
               icon: data
             }
             // return res.json(jsonData);
-            req.flash('info', `Upload ${newIcon.name} into ${newIcon.package} pack successfully!`);
+            req.flash('info', `Upload <a href="/edit/${newIcon.iconSlug}">${newIcon.name}</a> into <a href="/pack/${newIcon.packageSlug}">${newIcon.package}</a> pack successfully!`);
             res.redirect('/admin');
           });
           
@@ -194,8 +199,6 @@ router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('i
       });
     })
 });
-
-
 
 router.get('/icons', ensureAuthenticated, function(req, res) {
   Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){
@@ -214,17 +217,6 @@ router.get('/icons', ensureAuthenticated, function(req, res) {
   });
 });
 
-router.get(['/pack', '/packs'], ensureAuthenticated, function(req, res, next) {
-  Icon.find({}, 'packageSlug', function(err, data) {
-    if (err || data === null){
-      var err = { status: 'ERROR', message: 'Could not find Icons' };
-      next(err);
-    }
-    const packs = new Set(data.map(icn => icn.packageSlug));
-
-    res.render('Icons', { title: `Icons :: ${title}`, packs: Array.from(packs) });
-  });
-});
 
 router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
   Icon.find({ packageSlug: req.params.pack }, null, { sort:{ iconSlug: 1 } }, function (err, data){
@@ -234,8 +226,8 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
     }
 
     if (data.length === 0) {
-      req.flash('info', 'No icons for a package called: ' + req.params.pack);
-      res.redirect('/pack');
+      req.flash('info', 'A package called ' + req.params.pack + ' seems empty.');
+      res.redirect('/admin');
       return;
     }
 
@@ -276,8 +268,6 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     dataToUpdate['tags'] = cleanTags;
   }
 
-  // console.log('the data to update is ' + JSON.stringify(dataToUpdate));
-
   Icon.findOneAndUpdate({ iconSlug: requestedIcon}, dataToUpdate, { new: true } , function(err,data){
     // if err saving, respond back with error
     if (err){
@@ -294,6 +284,60 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     });
   })
 });
+
+router.get('/undo', ensureAuthenticated, function(req, res, next) {
+  const lastIcon = req.session.lastIcon;
+  const undoneIcon = {
+    name: lastIcon.name,
+    packageSlug: lastIcon.packageSlug,
+    iconSlug: lastIcon.iconSlug,
+    library: lastIcon.library,
+    package: lastIcon.package,
+    style: lastIcon.style,
+    tags: lastIcon.tags,
+    premium: lastIcon.premium,
+    paths: lastIcon.paths,
+  }
+
+  const icon = new Icon(undoneIcon);
+  
+  icon.save( function (err, data) {
+    if (err){
+      var error = { status:'ERROR', message: 'Error undoing Icon' };
+      return res.json(error);
+    }
+  
+    console.log('Icon Undone!', undoneIcon);
+  
+    // JSON data of the new Icon
+    var jsonData = {
+      status: 'OK',
+      icon: data
+    }
+    
+    req.flash('info', `Undone <a href="/edit/${undoneIcon.iconSlug}">${undoneIcon.name}</a> into <a href="/pack/${undoneIcon.packageSlug}">${undoneIcon.package}</a> pack successfully!`);
+    res.redirect(req.header('Referer'));
+  });
+});
+
+router.get('/delete/:icon', ensureAuthenticated, function(req, res, next) {
+  const requestedIcon = req.params.icon;
+  Icon.findOneAndRemove({ iconSlug: requestedIcon}, function(err, doc){
+    if (err){
+      var error = {status:'ERROR', message: 'Error removing Icon: ' + err};
+      return res.json(error);
+    }
+    
+    req.session.lastIcon = doc;
+    req.flash('info', `Icon ${req.params.icon} deleted successfully! <a href="/undo">Undo?</a>`);
+    
+    countIconsInPack(doc.packageSlug, count => {
+      res.redirect(count === 0 ? '/admin' : req.header('Referer'));
+    });
+    
+  })
+});
+
 
 router.use(function(req, res) {
   res.status(404).render('NotFound', { title });

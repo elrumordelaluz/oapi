@@ -19,7 +19,7 @@ const Header = (props) => {
 
   const renderAlert = (type, msg) => (
     <div key={msg} className={`alert alert-${type}`} role="alert">
-      {msg}
+      <span dangerouslySetInnerHTML={{__html: msg}} />
       <button type="button" className="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

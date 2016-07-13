@@ -3,12 +3,6 @@ import DefaultLayout from './layouts/DefaultLayout';
 import Element from './Element';
 
 const Icons = (props) => {
-  const renderPacks = () => props.packs.map(pack => (
-    <li key={pack}>
-      <a href={'/pack/' + pack}>{pack}</a>
-    </li>
-  ));
-
   const renderIcons = () => props.icons.map(icon => {
     return (
     <li key={icon._id} className="Icon">
@@ -29,7 +23,10 @@ const Icons = (props) => {
         </div>
         <div className="IconActions">
           <a href={`/edit/${icon.iconSlug}`} className="btn btn-info">Edit</a>
-          { /* <a href="#0" className="btn btn-warning">Delete</a> */ }
+          <a 
+            href={`/delete/${icon.iconSlug}`} 
+            data-icon={icon.iconSlug}
+            className="btn btn-danger deleteIconButton">Delete</a>
         </div>
       </div>
 
@@ -53,9 +50,7 @@ const Icons = (props) => {
 
       <ul className="IconsList">
         { props.icons && renderIcons() }
-        { props.packs && renderPacks() }
       </ul>
-
     </DefaultLayout>
   );
 }
