@@ -137,7 +137,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
   
-router.post('/upload', ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
+router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
   Icon.count({})
     .then(count => {
       fs.readFile(req.file.path, 'utf-8', function(err, data) {
@@ -185,7 +185,9 @@ router.post('/upload', ensureAuthenticated, upload.single('iconFile'), function(
               status: 'OK',
               icon: data
             }
-            return res.json(jsonData);
+            // return res.json(jsonData);
+            req.flash('info', `Upload ${newIcon.name} into ${newIcon.package} pack successfully!`);
+            res.redirect('/admin');
           });
           
         });

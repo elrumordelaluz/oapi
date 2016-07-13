@@ -1,1 +1,1 @@
-// CUSTOM JS FILE //
+$("form").validate();
