@@ -101,6 +101,27 @@ router.get('/token', ensureAuthenticated, function(req, res, next) {
 
 
 
+router.get('/admin', /*ensureAuthenticated,*/ function(req, res, next) {
+  Icon.find({}, 'packageSlug', function(err, data) {
+    if (err || data === null){
+      var err = { status: 'ERROR', message: 'Could not find Icons' };
+      next(err);
+    }
+    
+    const icons = data.map(icn => icn.packageSlug)
+    const packs = icons.reduce((prev, next) => {
+      return prev.hasOwnProperty(next) ? Object.assign({}, prev, {
+        [next]: prev[next] + 1
+      }) : Object.assign({}, prev, {
+        [next]: 1
+      });
+    }, {})
+    
+    res.render('Admin', { title, packs });
+  });
+});
+
+
 router.get('/upload', ensureAuthenticated, function(req, res, next) {
   res.render('Upload', { title });
 });

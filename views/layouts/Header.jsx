@@ -4,8 +4,11 @@ const Header = (props) => {
   const navigation = props.currentUser ?
     (
       <ul className="nav navbar-nav navbar-right">
-        <li><a>Hello, {props.currentUser.username} {props.currentUser.admin && "(admin)" }</a></li>
+        <li><a>Hello, {props.currentUser.username}</a></li>
         <li><a href="/logout">Log out</a></li>
+        {props.currentUser.admin && (
+          <li><a href="/admin">[Admin]</a></li>
+        ) }
       </ul>
     ) : (
       <ul className="nav navbar-nav navbar-right">
