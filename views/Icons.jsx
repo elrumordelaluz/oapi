@@ -5,7 +5,7 @@ import Element from './Element';
 const Icons = (props) => {
   const renderIcons = () => props.icons.map(icon => {
     return (
-      <div className="edit-icon__item">
+      <div key={icon.iconSlug} data-name={icon.name} className="edit-icon__item">
         <div className="panel panel-default">
           <header className="panel-heading edit-icon__header">
             <h3 className="panel-title">
@@ -15,11 +15,11 @@ const Icons = (props) => {
               )}
             </h3>
             <div className="btn-group" role="group">
-              <a href={`/edit/${icon.iconSlug}`} className="btn">Edit</a>
+              <a href={`/edit/${icon.iconSlug}`} className="btn btn-default">Edit</a>
               <a 
                 href={`/delete/${icon.iconSlug}`} 
                 data-icon={icon.iconSlug}
-                className="btn deleteIconButton">Delete</a>
+                className="btn btn-default deleteIconButton">Delete</a>
             </div>
           </header>
           <div className="panel-body">
@@ -63,6 +63,13 @@ const Icons = (props) => {
           <a href="/admin" className="btn btn-info btn-xs">&lt;</a>{' '}
           {mainTitle} <small className="badge">{props.icons.length} icons</small>
         </h1>
+        <div className="form-group">
+          <input 
+            id="search-icons"
+            type="text" 
+            className="form-control" 
+            placeholder="Search" />
+        </div>
         <label htmlFor="edit-layout" className="edit-layout">
           view as
         </label>

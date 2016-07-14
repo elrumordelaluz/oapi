@@ -126,6 +126,10 @@
   margin-top: 0;
 }
 
+.edit-page__header .form-group {
+  margin-bottom: 5px;
+}
+
 #edit-layout { display: none; }
 
 .edit-layout {
@@ -143,6 +147,22 @@
 #edit-layout:checked + header .edit-layout:after {
   content: ' boxes'
 }
+
+#edit-layout:checked ~ .edit-icon {
+  flex-direction: column;
+}
+
+#edit-layout:checked ~ .edit-icon .edit-icon__item {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+#edit-layout:checked ~ .edit-icon .panel-body,
+#edit-layout:checked ~ .edit-icon .panel-footer {
+  display: none;
+}
+
+
 
 .edit-icon {
   display: flex;
@@ -175,4 +195,8 @@
 
 .edit-icon__icon {
   padding: 1em;
+}
+
+.highlight {
+  background-color: #fffd77;
 }
