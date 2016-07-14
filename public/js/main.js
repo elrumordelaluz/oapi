@@ -20,6 +20,7 @@ const doSearch = (e) => {
   const container = document.querySelector('.edit-icon');
   const allIcons = container.querySelectorAll('.edit-icon__item');
   const matched = container.querySelectorAll(`[data-name*="${term}"]`);
+  const noResults = container.querySelector('.edit-icon__noResults');
   
   const controlItems = (items, display) => {
     items.forEach(item => item.style.display = display);
@@ -30,12 +31,20 @@ const doSearch = (e) => {
   
   const resetQuery = () => {
     search.value = '';
-    showItems(Array.from(allIcons))
+    showItems(Array.from(allIcons));
+    noResults.style.display = "none";
   }
     
   if (term.length !== 0) {
-    hideItems(Array.from(allIcons))
-    showItems(Array.from(matched))
+    hideItems(Array.from(allIcons));
+    showItems(Array.from(matched));
+    
+    if (matched.length > 0) {
+      noResults.style.display = "none";
+    } else {
+      noResults.style.display = "block";
+    }
+    
   } else {
     resetQuery();
   }

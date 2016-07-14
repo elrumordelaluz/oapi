@@ -75,7 +75,18 @@ const Icons = (props) => {
         </label>
       </header>
       <div className="edit-icon">
+        
         { renderIcons() }
+        
+        <div className="edit-icon__noResults">
+          <div className="panel panel-default">
+            <header className="panel-heading edit-icon__header">
+              <h3 className="panel-title">
+                No icons
+              </h3>
+            </header>
+          </div>
+        </div>
       </div>
     </DefaultLayout>
   );
