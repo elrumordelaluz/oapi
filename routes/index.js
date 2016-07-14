@@ -143,61 +143,70 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
   
 router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
-  Icon.count({})
-    .then(count => {
-      fs.readFile(req.file.path, 'utf-8', function(err, data) {
-        svgson(data, {
-          svgo: true,
-          svgoPlugins: [
-            { removeStyleElement: true },
-            { removeAttrs: {
-                attrs: [
-                  '(stroke-width|stroke-linecap|stroke-linejoin)',
-                  'svg:id'
-                ]
-              }
-            },
-            { cleanupIDs: false },
-            { moveElemsAttrsToGroup: false },
-          ]
-        }, function(result) {
-          // 1. Got total icons number 
-          // 2. Processed newIcon with 'svgson'
-          const newIcon = {
-            name: req.body.iconName,
-            packageSlug: h.toSlug(req.body.iconPack),
-            iconSlug: `${h.toSlug(req.body.iconName)}_${count + 1}`,
-            library: req.body.iconLib,
-            package: req.body.iconPack,
-            style: req.body.iconStyle,
-            tags: req.body.iconTags.split(","),
-            premium: req.body.iconPremium ? true : false,
-            paths: result,
-          }
+  Icon.find({}, 'iconSlug', function(err, data) {
+    const count = data.reduce((prev,next) => {
+      const strParts = next.iconSlug.split('_');
+      const actualNum = strParts[strParts.length - 1];
+      return actualNum > prev ? actualNum : prev;
+    }, 0);
+    
+    fs.readFile(req.file.path, 'utf-8', function(err, data) {
+      svgson(data, {
+        svgo: true,
+        svgoPlugins: [
+          { removeStyleElement: true },
+          { removeAttrs: {
+              attrs: [
+                '(stroke-width|stroke-linecap|stroke-linejoin)',
+                'svg:id'
+              ]
+            }
+          },
+          { cleanupIDs: false },
+          { moveElemsAttrsToGroup: false },
+        ]
+      }, function(result) {
+        // 1. Got total icons number 
+        // 2. Processed newIcon with 'svgson'
+        const newIcon = {
+          name: req.body.iconName,
+          packageSlug: h.toSlug(req.body.iconPack),
+          iconSlug: `${h.toSlug(req.body.iconName)}_${parseInt(count) + 1}`,
+          library: req.body.iconLib,
+          package: req.body.iconPack,
+          style: req.body.iconStyle,
+          tags: req.body.iconTags.split(","),
+          premium: req.body.iconPremium ? true : false,
+          paths: result,
+        }
 
-          const icon = new Icon(newIcon);
-          
-          icon.save( function (err, data) {
-            if (err){
-              var error = { status:'ERROR', message: 'Error saving Icon' };
-              return res.json(error);
-            }
-          
-            console.log('Icon saved!', newIcon);
-          
-            // JSON data of the new Icon
-            var jsonData = {
-              status: 'OK',
-              icon: data
-            }
-            // return res.json(jsonData);
-            req.flash('info', `Upload <a href="/edit/${newIcon.iconSlug}">${newIcon.name}</a> into <a href="/pack/${newIcon.packageSlug}">${newIcon.package}</a> pack successfully!`);
-            res.redirect('/admin');
-          });
-          
+        const icon = new Icon(newIcon);
+        
+        icon.save( function (err, data) {
+          if (err){
+            var error = { status:'ERROR', message: 'Error saving Icon' };
+            return res.json(error);
+          }
+        
+          console.log('Icon saved!', newIcon);
+        
+          // JSON data of the new Icon
+          var jsonData = {
+            status: 'OK',
+            icon: data
+          }
+          // return res.json(jsonData);
+          req.flash('info', `Upload <a href="/edit/${newIcon.iconSlug}">${newIcon.name}</a> into <a href="/pack/${newIcon.packageSlug}">${newIcon.package}</a> pack successfully!`);
+          res.redirect('/admin');
         });
+        
       });
-    })
+    });
+  })
+  // Icon.count({})
+  //   .then(count => {
+  //     
+  //   })
 });
 
 router.get('/icons', ensureAuthenticated, function(req, res) {
@@ -218,7 +227,7 @@ router.get('/icons', ensureAuthenticated, function(req, res) {
 });
 
 
-router.get('/pack/:pack', /*ensureAuthenticated,*/ function(req, res, next) {
+router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
   Icon.find({ packageSlug: req.params.pack }, null, { sort:{ iconSlug: 1 } }, function (err, data){
     if (err || data === null){
       var err = { status: 'ERROR', message: 'Could not find Icons' };
