@@ -107,7 +107,7 @@ const countIconsInPack = (packageSlug, cb) => {
   })
 }
 
-router.get('/admin', /*ensureAuthenticated,*/ function(req, res, next) {
+router.get('/admin', ensureAuthenticated, function(req, res, next) {
   Icon.find({}, 'packageSlug', function(err, data) {
     if (err || data === null){
       var err = { status: 'ERROR', message: 'Could not find Icons' };

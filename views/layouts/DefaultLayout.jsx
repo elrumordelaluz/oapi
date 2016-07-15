@@ -9,9 +9,9 @@ class DefaultLayout extends Component {
         <head>
           <meta charSet="utf-8" />
           <title>{ this.props.title }</title>
-          <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
           <link rel="stylesheet" href="https://cdn.rawgit.com/bootstrap-tagsinput/bootstrap-tagsinput/master/dist/bootstrap-tagsinput.css"/>
-          <link rel="stylesheet" href="/css/aurora-grid.css"/>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aurora-grid/1.0.6/aurora-grid.min.css"/>
           <link rel="stylesheet" href="/css/style.css"/>
         </head>
         <body>
