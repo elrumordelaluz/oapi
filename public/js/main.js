@@ -1,5 +1,10 @@
 // Form Validation
-$(["#upload-single", "#upload-multiple"]).validate();
+const uploadSingle = document.querySelectorAll('#upload-single');
+if (uploadSingle) {
+   $('form').each(function() {  // attach to all form elements on page
+    $(this).validate({});
+  });
+}
 
 // Delete Button
 const deleteButtons = document.querySelectorAll('.deleteIconButton');
@@ -58,4 +63,7 @@ const doSearch = (e) => {
   }
 }
 
-search.addEventListener('keyup', doSearch, false);
+if (search) {
+  search.addEventListener('keyup', doSearch, false);
+}
+  

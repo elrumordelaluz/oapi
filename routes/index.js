@@ -213,7 +213,7 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
       const actualNum = strParts[strParts.length - 1];
       return actualNum > prev ? actualNum : prev;
     }, 0);
-    
+    console.log(req.files);
     res.json(data)
     // fs.readFile(req.file.path, 'utf-8', function(err, data) {
     //   svgson(data, {
