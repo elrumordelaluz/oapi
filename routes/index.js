@@ -127,9 +127,9 @@ router.get('/admin', /*ensureAuthenticated,*/ function(req, res, next) {
 });
 
 
-router.get('/upload', ensureAuthenticated, function(req, res, next) {
-  res.render('Upload', { title });
-});
+// router.get('/upload', ensureAuthenticated, function(req, res, next) {
+//   res.render('Upload', { title });
+// });
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -142,7 +142,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage })
   
-router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
+router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
   Icon.find({}, 'iconSlug', function(err, data) {
     const count = data.reduce((prev,next) => {
       const strParts = next.iconSlug.split('_');
@@ -203,11 +203,73 @@ router.post(['/upload', '/upload-single'], ensureAuthenticated, upload.single('i
       });
     });
   })
-  // Icon.count({})
-  //   .then(count => {
-  //     
-  //   })
 });
+
+
+router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconFiles'), function(req, res, next) {
+  Icon.find({}, 'iconSlug', function(err, data) {
+    const count = data.reduce((prev,next) => {
+      const strParts = next.iconSlug.split('_');
+      const actualNum = strParts[strParts.length - 1];
+      return actualNum > prev ? actualNum : prev;
+    }, 0);
+    
+    res.json(data)
+    // fs.readFile(req.file.path, 'utf-8', function(err, data) {
+    //   svgson(data, {
+    //     svgo: true,
+    //     svgoPlugins: [
+    //       { removeStyleElement: true },
+    //       { removeAttrs: {
+    //           attrs: [
+    //             '(stroke-width|stroke-linecap|stroke-linejoin)',
+    //             'svg:id'
+    //           ]
+    //         }
+    //       },
+    //       { cleanupIDs: false },
+    //       { moveElemsAttrsToGroup: false },
+    //     ]
+    //   }, function(result) {
+    //     // 1. Got total icons number 
+    //     // 2. Processed newIcon with 'svgson'
+    //     const newIcon = {
+    //       name: req.body.iconName,
+    //       packageSlug: h.toSlug(req.body.iconPack),
+    //       iconSlug: `${h.toSlug(req.body.iconName)}_${parseInt(count) + 1}`,
+    //       library: req.body.iconLib,
+    //       package: req.body.iconPack,
+    //       style: req.body.iconStyle,
+    //       tags: req.body.iconTags.split(","),
+    //       premium: req.body.iconPremium ? true : false,
+    //       paths: result,
+    //     }
+    // 
+    //     const icon = new Icon(newIcon);
+    //     
+    //     icon.save( function (err, data) {
+    //       if (err){
+    //         var error = { status:'ERROR', message: 'Error saving Icon' };
+    //         return res.json(error);
+    //       }
+    //     
+    //       console.log('Icon saved!', newIcon);
+    //     
+    //       // JSON data of the new Icon
+    //       var jsonData = {
+    //         status: 'OK',
+    //         icon: data
+    //       }
+    //       // return res.json(jsonData);
+    //       req.flash('info', `Upload <a href="/edit/${newIcon.iconSlug}">${newIcon.name}</a> into <a href="/pack/${newIcon.packageSlug}">${newIcon.package}</a> pack successfully!`);
+    //       res.redirect('/admin');
+    //     });
+    //     
+    //   });
+    // });
+  })
+});
+
 
 router.get('/icons', ensureAuthenticated, function(req, res) {
   Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){

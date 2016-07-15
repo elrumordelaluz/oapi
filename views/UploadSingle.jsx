@@ -18,7 +18,7 @@ const packs = [
 
 const UploadSingle = (props) => {
   return (
-      <form action="/upload-single" method="post" encType="multipart/form-data">
+      <form action="/upload-single" id="upload-single" method="post" encType="multipart/form-data">
         <div className="form-group">
           <label htmlFor="iconName">Icon Name</label>
           <input type="text" className="form-control" id="iconName" name="iconName" placeholder="Icon Name" required />
@@ -32,8 +32,13 @@ const UploadSingle = (props) => {
         
         <div className="form-group">
           <label htmlFor="iconPack">Pack</label>
-          <select id="iconPack" name="iconPack" className="form-control" required>
-            <option disabled selected>Select a pack...</option>
+          <select 
+            id="iconPack" 
+            name="iconPack" 
+            className="form-control" 
+            defaultValue="def"
+            required>
+            <option disabled value="def">Select a pack...</option>
             { packs.map(pack => <option value={pack} key={pack}>{pack}</option>) }
           </select>
         </div>

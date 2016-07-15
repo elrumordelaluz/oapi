@@ -12,7 +12,7 @@ const Admin = (props) => {
   
   
   const renderPacks = () => packsKeys.map(pack => (
-    <a className="list-group-item" href={'/pack/' + pack}>{pack}{' '}
+    <a className="list-group-item" key={pack} href={'/pack/' + pack}>{pack}{' '}
       <span className="badge">{props.packs[pack]}</span>
     </a>
   ));

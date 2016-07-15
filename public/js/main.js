@@ -1,5 +1,5 @@
 // Form Validation
-$("form").validate();
+$(["#upload-single", "#upload-multiple"]).validate();
 
 // Delete Button
 const deleteButtons = document.querySelectorAll('.deleteIconButton');

@@ -18,17 +18,22 @@ const packs = [
 
 const UploadMultiple = (props) => {
   return (
-      <form action="/upload" method="post" encType="multipart/form-data">        
+      <form action="/upload-multiple" id="upload-multiple"  method="post" encType="multipart/form-data">        
         <div className="form-group">
-          <label htmlFor="iconFile">Icon files</label>
-          <input type="file" id="iconFile" name="iconFile" required multiple />
+          <label htmlFor="multipleIconFiles">Icon files</label>
+          <input type="file" id="multipleIconFiles" name="multipleIconFiles" required multiple />
           <p className="help-block">[ .svg ]</p>
         </div>
         
         <div className="form-group">
           <label htmlFor="iconPack">Pack</label>
-          <select id="iconPack" name="iconPack" className="form-control" required>
-            <option disabled selected>Select a pack...</option>
+          <select 
+            id="iconPack" 
+            name="iconPack" 
+            className="form-control" 
+            defaultValue="def"
+            required>
+            <option disabled value="def">Select a pack...</option>
             { packs.map(pack => <option value={pack} key={pack}>{pack}</option>) }
           </select>
         </div>
