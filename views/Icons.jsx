@@ -5,11 +5,15 @@ import Element from './Element';
 const Icons = (props) => {
   const renderIcons = () => props.icons.map(icon => {
     return (
-      <div key={icon.iconSlug} data-name={icon.name} className="edit-icon__item">
+      <div 
+        key={icon.iconSlug}
+        data-slug={icon.iconSlug} 
+        data-name={icon.name} 
+        className="edit-icon__item">
         <div className="panel panel-default">
           <header className="panel-heading edit-icon__header">
             <h3 className="panel-title">
-              {icon.name}{' '}
+              {icon.iconSlug}{' '}
               { icon.premium && (
                 <span className="label label-warning">Premium</span>
               )}
@@ -29,13 +33,15 @@ const Icons = (props) => {
                   <Element obj={icon.paths} />
                 </div>
               </div>
-              <div className="ae-grid__item item-sm-6">
-                <p><b>iconSlug</b> <mark>{icon.iconSlug}</mark></p>
-                <p><b>style</b>: <mark>{icon.style}</mark></p>
-                <b>tags</b>:
-                <ul className="IconTags">
-                  {icon.tags.map(tag => <li><span className="label label-info" key={tag}>{tag}</span></li>)}
-                </ul>
+              <div className="ae-grid__item item-sm-6 item-sm--center">
+                <div className="well">
+                  <p>Name: <b>{icon.name}</b></p>
+                  <p>Style: <b>{icon.style}</b></p>
+                  <span>Tags:</span>
+                  <ul className="IconTags">
+                    {icon.tags.map(tag => <li><span className="label label-info" key={tag}>{tag}</span></li>)}
+                  </ul>
+                </div>
               </div>
             </div>
             <div className="ae-grid">

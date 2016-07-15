@@ -25,7 +25,7 @@ const doSearch = (e) => {
   const term = e.target.value;
   const container = document.querySelector('.edit-icon');
   const allIcons = container.querySelectorAll('.edit-icon__item');
-  const matched = container.querySelectorAll(`[data-name*="${term}"]`);
+  const matched = container.querySelectorAll(`[data-name*="${term}" i], [data-slug*="${term}" i]`);
   const noResults = container.querySelector('.edit-icon__noResults');
   
   const controlItems = (items, display) => {
@@ -68,6 +68,8 @@ if (search) {
   search.addEventListener('keyup', doSearch, false);
 }
   
+  
+
 // Edit icon
 const editIcon = document.querySelector('#edit-single-icon');
 if (editIcon) {
@@ -75,13 +77,11 @@ if (editIcon) {
   const iconStyle = editIcon.querySelector('#iconStyle');
   const iconTags = editIcon.querySelector('#iconTags');
   const iconPremiumTrue = editIcon.querySelector('#iconPremiumTrue');
-  const iconPremiumFalse = editIcon.querySelector('#iconPremiumFalse');
-  const isPremium = iconPremiumTrue.checked && !iconPremiumFalse.checked;
   
   const getValues = () => ({
     name: iconName.value,
     style: iconStyle.value,
-    premium: isPremium,
+    premium: iconPremiumTrue.checked,
     tags: iconTags.value,
   });
   

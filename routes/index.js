@@ -312,7 +312,7 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
   });
 });
 
-router.get('/edit/:icon', /*ensureAuthenticated,*/ function(req, res, next) {
+router.get('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   Icon.findOne({ iconSlug: req.params.icon }, function(err, data) {
     if(err || data == null){
       var error = {status:'ERROR', message: 'Could not find that Icon ID'};
