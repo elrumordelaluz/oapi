@@ -5,7 +5,8 @@ var jwt = require('jsonwebtoken');
 var multer  = require('multer');
 
 const svgson = require('svgson');
-const fs = require('fs');
+// const fs = require('fs');
+const fs = require('fs-promise');
 
 var Icon = require('../models/icon');
 
@@ -213,60 +214,65 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
       const actualNum = strParts[strParts.length - 1];
       return actualNum > prev ? actualNum : prev;
     }, 0);
-    console.log(req.files);
-    res.json(data)
-    // fs.readFile(req.file.path, 'utf-8', function(err, data) {
-    //   svgson(data, {
-    //     svgo: true,
-    //     svgoPlugins: [
-    //       { removeStyleElement: true },
-    //       { removeAttrs: {
-    //           attrs: [
-    //             '(stroke-width|stroke-linecap|stroke-linejoin)',
-    //             'svg:id'
-    //           ]
-    //         }
-    //       },
-    //       { cleanupIDs: false },
-    //       { moveElemsAttrsToGroup: false },
-    //     ]
-    //   }, function(result) {
-    //     // 1. Got total icons number 
-    //     // 2. Processed newIcon with 'svgson'
-    //     const newIcon = {
-    //       name: req.body.iconName,
-    //       packageSlug: h.toSlug(req.body.iconPack),
-    //       iconSlug: `${h.toSlug(req.body.iconName)}_${parseInt(count) + 1}`,
-    //       library: req.body.iconLib,
-    //       package: req.body.iconPack,
-    //       style: req.body.iconStyle,
-    //       tags: req.body.iconTags.split(","),
-    //       premium: req.body.iconPremium ? true : false,
-    //       paths: result,
-    //     }
-    // 
-    //     const icon = new Icon(newIcon);
-    //     
-    //     icon.save( function (err, data) {
-    //       if (err){
-    //         var error = { status:'ERROR', message: 'Error saving Icon' };
-    //         return res.json(error);
-    //       }
-    //     
-    //       console.log('Icon saved!', newIcon);
-    //     
-    //       // JSON data of the new Icon
-    //       var jsonData = {
-    //         status: 'OK',
-    //         icon: data
-    //       }
-    //       // return res.json(jsonData);
-    //       req.flash('info', `Upload <a href="/edit/${newIcon.iconSlug}">${newIcon.name}</a> into <a href="/pack/${newIcon.packageSlug}">${newIcon.package}</a> pack successfully!`);
-    //       res.redirect('/admin');
-    //     });
-    //     
-    //   });
-    // });
+        
+    const processSeparateFile = (file) => {
+      return new Promise((resolve, reject) => {
+        return fs.readFile(file.path, 'utf-8').then(data => {
+          svgson(data, {
+            svgo: true,
+            title: file.originalname.substr(0, file.originalname.lastIndexOf(".")),
+            pathsKey: 'paths',
+            svgoPlugins: [
+              { removeStyleElement: true },
+              { removeAttrs: {
+                  attrs: [
+                    '(stroke-width|stroke-linecap|stroke-linejoin)',
+                    'svg:id'
+                  ]
+                }
+              },
+              { cleanupIDs: false },
+              { moveElemsAttrsToGroup: false },
+            ]
+          }, resolve);
+        });
+      });
+    };
+    
+    Promise.all(req.files.map(file => {
+      return processSeparateFile(file);
+    })).then(iconsArray => {
+      const packageSlug = h.toSlug(req.body.iconPack);
+      const newIcons = iconsArray.map((icon, index) => {
+        return {
+          name: icon.title,
+          packageSlug: packageSlug,
+          iconSlug: `${h.toSlug(icon.title)}_${parseInt(count) + index + 1}`,
+          library: req.body.iconLib,
+          package: req.body.iconPack,
+          style: req.body.iconStyle,
+          tags: [],
+          premium: false,
+          paths: icon.paths,
+        };
+      });
+      
+      Icon.collection.insert(newIcons, handleInsert);
+      function handleInsert (err, icons) {
+        if (err) {
+          var error = { status:'ERROR', message: 'Error saving bulk Icons' };
+          return res.json(error);
+        } else {
+          var jsonData = {
+            status: 'OK',
+            icons: icons
+          }
+          
+          req.flash('info', `Upload ${icons.insertedCount} icons into <a href="/pack/${packageSlug}">${req.body.iconPack}</a> pack successfully!`);
+          res.redirect('/admin');
+        }
+      }
+    });
   })
 });
 
