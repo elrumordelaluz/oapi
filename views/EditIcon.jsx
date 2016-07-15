@@ -7,7 +7,7 @@ const EditIcon = (props) => {
   const tags = icon.tags.join(", ");
   return (
     <DefaultLayout {...props}>
-      <form action={`/edit/${icon.iconSlug}`} method="post">
+      <form action={`/edit/${icon.iconSlug}`} id="edit-single-icon" method="post">
         <div className="panel panel-default">
           <header className="panel-heading edit-icon__header">
             <h3 className="panel-title">
@@ -76,7 +76,7 @@ const EditIcon = (props) => {
                 
                 <div className="form-group">
                   <label htmlFor="iconTags">Tags</label>
-                  <input type="text" value={tags} name="iconTags" data-role="tagsinput" />
+                  <input type="text" value={tags} id="iconTags" name="iconTags" data-role="tagsinput" />
                 </div>
               
               </div>

@@ -18,6 +18,7 @@ if (deleteButtons) {
   });
 }
 
+// Search in Icons
 const search = document.querySelector('#search-icons');
 
 const doSearch = (e) => {
@@ -67,3 +68,40 @@ if (search) {
   search.addEventListener('keyup', doSearch, false);
 }
   
+// Edit icon
+const editIcon = document.querySelector('#edit-single-icon');
+if (editIcon) {
+  const iconName = editIcon.querySelector('#iconName');
+  const iconStyle = editIcon.querySelector('#iconStyle');
+  const iconTags = editIcon.querySelector('#iconTags');
+  const iconPremiumTrue = editIcon.querySelector('#iconPremiumTrue');
+  const iconPremiumFalse = editIcon.querySelector('#iconPremiumFalse');
+  const isPremium = iconPremiumTrue.checked && !iconPremiumFalse.checked;
+  
+  const getValues = () => ({
+    name: iconName.value,
+    style: iconStyle.value,
+    premium: isPremium,
+    tags: iconTags.value,
+  });
+  
+  const initValues = getValues();
+  
+  editIcon.addEventListener('submit', e => {
+    if (JSON.stringify(initValues) === JSON.stringify(getValues())) {
+      e.preventDefault();
+    }
+    return true;
+  });
+  
+}
+
+
+// Login
+
+const login = document.querySelector('#login');
+
+if (login) {
+  const username = login.querySelector('#username');
+  username.focus();
+}

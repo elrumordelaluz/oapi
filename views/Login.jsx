@@ -6,7 +6,7 @@ const Login = (props) => {
     <DefaultLayout {...props}>
       <div className="ae-grid">
         <div className="ae-grid__item item-sm-6 item-sm--offset-3">
-          <form action="/login" method="post">
+          <form action="/login" method="post" id="login">
             <div className="form-group">
               <label htmlFor="username">Username</label>
               <input 
