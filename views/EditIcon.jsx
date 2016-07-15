@@ -7,64 +7,95 @@ const EditIcon = (props) => {
   const tags = icon.tags.join(", ");
   return (
     <DefaultLayout {...props}>
-
       <form action={`/edit/${icon.iconSlug}`} method="post">
-
-        <div className="EditIconTitle">
-          <input type="text" value={icon.name} name="iconName" />
-        </div>
-
-        <div className="EditIconPack">
-          <a href={`/pack/${icon.packageSlug}`}>{icon.package}</a>
-        </div>
-
-        <div className="Icon">
-
-          <textarea rows="20" className="EditIconCode" defaultValue={JSON.stringify(icon.paths, null, 4)} />
-
-          <div className="IconPreview">
-            <Element obj={icon.paths} />
-          </div>
-
-          <div className="EditIconDetails">
-
-            <label className="EditContainer">
-              Slug
-              <input type="text" value={icon.iconSlug} disabled />
-            </label>
-
-            <div className="EditContainer">
-              Style:
-              <select value={icon.style} name="iconStyle" >
-                <option value="stroke">Stroke</option>
-                <option value="fill">Fill</option>
-              </select>
-            </div>
-
-            <div className="EditContainer">
-              Premium
-              <div>
-                <label>
-                  Yes
-                  <input type="radio" checked={icon.premium} value="true" name="iconPremium" />
-                </label>
-                <label>
-                  No
-                  <input type="radio" checked={!icon.premium} value="false" name="iconPremium" />
-                </label>
+        <div className="panel panel-default">
+          <header className="panel-heading edit-icon__header">
+            <h3 className="panel-title">
+              <a 
+                href={`/pack/${icon.packageSlug}`} 
+                className="btn btn-default btn-xs">{icon.package}</a> {' '}
+              {icon.iconSlug} {' '}<small>/Slug</small>
+            </h3>
+            <button role="submit" className="btn btn-info">Save</button>
+          </header>
+          
+          <div className="panel-body">
+            <div className="ae-grid">
+              <div className="ae-grid__item item-sm-5">
+                <div className="edit-icon__icon">
+                  <Element obj={icon.paths} />
+                </div>
+              </div>
+              <div className="ae-grid__item item-sm-7">
+                <div className="form-group">
+                  <label htmlFor="iconName">Icon Name</label>
+                  <input 
+                    type="text" 
+                    className="form-control" 
+                    id="iconName" 
+                    name="iconName" 
+                    defaultValue={icon.name}
+                    placeholder="Icon Name" />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="iconStyle">Icon Style</label>
+                  <select 
+                    id="iconStyle" 
+                    name="iconStyle" 
+                    className="form-control" 
+                    value={icon.style}>
+                    <option value="stroke">Stroke</option>
+                    <option value="fill">Fill</option>
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label>Premium</label>
+                  <div className="radio">
+                    <label>
+                      <input 
+                        type="radio" 
+                        name="iconPremium" 
+                        id="iconPremiumTrue" 
+                        value="true" 
+                        checked={icon.premium} /> Yes
+                    </label>
+                  </div>
+                  <div className="radio">
+                    <label>
+                      <input 
+                        type="radio" 
+                        name="iconPremium" 
+                        id="iconPremiumFalse" 
+                        value="false"
+                        checked={!icon.premium} /> No
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="iconTags">Tags</label>
+                  <input type="text" value={tags} name="iconTags" data-role="tagsinput" />
+                </div>
+              
               </div>
             </div>
-
-
-
-            <label className="EditContainer">
-              Tags
-              <input type="text" value={tags} name="iconTags" data-role="tagsinput" />
-            </label>
-
+            
+            <div className="ae-grid">
+              <div className="ae-grid__item item-sm-12">
+                <pre className="IconCode">
+                  <code>
+                    {JSON.stringify(icon.paths, null, 2)}
+                  </code>
+                </pre>
+              </div>
+            </div>
           </div>
-          <button className="btn btn-info">Save</button>
-
+          
+          <footer className="panel-footer clearfix">
+            <button role="submit" className="btn btn-info">Save</button>
+          </footer>
         </div>
       </form>
 

@@ -22,7 +22,7 @@ const UploadSingle = (props) => {
         <div className="form-group">
           <label htmlFor="iconName">Icon Name</label>
           <input type="text" className="form-control" id="iconName" name="iconName" placeholder="Icon Name" required />
-        </div>  
+        </div>
         
         <div className="form-group">
           <label htmlFor="iconFile">Icon file</label>
@@ -63,12 +63,7 @@ const UploadSingle = (props) => {
           <label htmlFor="iconTags">Tags</label> {' '}
           <input type="text" name="iconTags" id="iconTags" data-role="tagsinput" className="form-control" />
         </div>
-        
-        <div className="form-group">
-          <label htmlFor="iconDesc">Description</label>
-          <textarea id="iconDesc" name="iconDesc" placeholder="Lorem ipsum..." className="form-control" rows="3"></textarea>
-        </div>
-        
+                
         <div className="form-group">
           <label htmlFor="iconLib">Library</label>
           <input type="text" id="iconLib" name="iconLib" className="form-control" defaultValue="The Icon Set" />
