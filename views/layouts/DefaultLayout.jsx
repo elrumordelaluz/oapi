@@ -8,6 +8,7 @@ class DefaultLayout extends Component {
       <html>
         <head>
           <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>{ this.props.title }</title>
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
           <link rel="stylesheet" href="https://cdn.rawgit.com/bootstrap-tagsinput/bootstrap-tagsinput/master/dist/bootstrap-tagsinput.css"/>
