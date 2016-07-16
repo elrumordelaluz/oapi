@@ -20,52 +20,61 @@ if (deleteButtons) {
 
 // Search in Icons
 const search = document.querySelector('#search-icons');
+const showIconsContainer = document.querySelector('.edit-icon');
+const onlyPremium = document.querySelector('#edit-premium');
+const controlItems = (items, display) => {
+  items.forEach(item => item.style.display = display);
+}
+const hideItems = (items) => controlItems(items, 'none');
+const showItems = (items) => controlItems(items, 'block');
 
-const doSearch = (e) => {
-  const term = e.target.value;
-  const container = document.querySelector('.edit-icon');
-  const allIcons = container.querySelectorAll('.edit-icon__item');
-  const matched = container.querySelectorAll(`[data-name*="${term}" i], [data-slug*="${term}" i]`);
-  const noResults = container.querySelector('.edit-icon__noResults');
+const doSearch = (value) => {
+  const term = value;
+  const allIcons = showIconsContainer.querySelectorAll('.edit-icon__item');
   
-  const controlItems = (items, display) => {
-    items.forEach(item => item.style.display = display);
+  const matchedAll = showIconsContainer.querySelectorAll(`[data-name*="${term}" i], [data-slug*="${term}" i]`);
+  const matchedWithPremium = showIconsContainer.querySelectorAll(`[data-name*="${term}" i][data-premium="true" i], [data-slug*="${term}" i][data-premium="true" i]`);
+  const matchedOnlyPremium = showIconsContainer.querySelectorAll(`[data-premium="true" i]`);
+  let matched;
+  
+  if (onlyPremium.checked) {
+    if (term.length === 0) {
+      matched = matchedOnlyPremium;
+    } else {
+      matched = matchedWithPremium;
+    }
+  } else {
+    matched = matchedAll;
   }
   
-  const hideItems = (items) => controlItems(items, 'none');
-  const showItems = (items) => controlItems(items, 'block');
+  const noResults = showIconsContainer.querySelector('.edit-icon__noResults');
   
-  const resetQuery = () => {
-    search.value = '';
-    showItems(Array.from(allIcons));
-    noResults.style.display = "none";
-  }
-    
-  if (term.length !== 0) {
+  if (term !== '' || onlyPremium.checked) {
     hideItems(Array.from(allIcons));
-    showItems(Array.from(matched));
-    
-    if (matched.length > 0) {
+    if (matched.length !== 0) {
+      showItems(Array.from(matched));
       noResults.style.display = "none";
     } else {
       noResults.style.display = "block";
     }
-    
   } else {
-    resetQuery();
-  }
-  
-  if (e.which === 27) {
-    resetQuery();
-  }
-  
-  if (e.which === 13) {
-    search.blur();
+    showItems(Array.from(allIcons));
   }
 }
 
 if (search) {
-  search.addEventListener('keyup', doSearch, false);
+  const onlyPremium = document.querySelector('#edit-premium');
+  onlyPremium.addEventListener('change', () => doSearch(search.value) , false)
+  search.addEventListener('keyup', e => {
+    doSearch(e.target.value);
+    if (e.which === 27) {
+      search.value = '';
+      doSearch('');
+    }
+    if (e.which === 13) {
+      search.blur();
+    }
+  }, false);
 }
   
   

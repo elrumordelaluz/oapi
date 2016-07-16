@@ -9,6 +9,7 @@ const Icons = (props) => {
         key={icon.iconSlug}
         data-slug={icon.iconSlug} 
         data-name={icon.name} 
+        data-premium={icon.premium}
         className="edit-icon__item">
         <div className="panel panel-default">
           <header className="panel-heading edit-icon__header">
@@ -76,9 +77,12 @@ const Icons = (props) => {
             className="form-control" 
             placeholder="Search" />
         </div>
-        <label htmlFor="edit-layout" className="edit-layout">
-          view as
-        </label>
+        <div>
+            <label className="edit-premium">
+            <input type="checkbox" id="edit-premium" /> Premium
+          </label>
+          <label htmlFor="edit-layout" className="edit-layout" />
+        </div>
       </header>
       <div className="edit-icon">
         
