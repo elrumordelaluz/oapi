@@ -40,7 +40,7 @@ const Icons = (props) => {
                   <p>Style: <b>{icon.style}</b></p>
                   <span>Tags:</span>
                   <ul className="IconTags">
-                    {icon.tags.map(tag => <li><span className="label label-info" key={tag}>{tag}</span></li>)}
+                    {icon.tags.map((tag, i) => <li><span className="label label-info" key={i}>{tag}</span></li>)}
                   </ul>
                 </div>
               </div>
