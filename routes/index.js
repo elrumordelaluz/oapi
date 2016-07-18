@@ -221,12 +221,6 @@ router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), fu
 
 
 router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconFiles'), function(req, res, next) {
-  // Icon.find({}, 'iconSlug', function(err, data) {
-  //   const count = data.reduce((prev,next) => {
-  //     const strParts = next.iconSlug.split('_');
-  //     const actualNum = strParts[strParts.length - 1];
-  //     return actualNum > prev ? actualNum : prev;
-  //   }, 0);
   const count = req.suffix;
   const files = req.files.length;
   const newCount = parseInt(count) + files;
@@ -299,7 +293,6 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
     Icon.collection.insert(newIcons, handleInsert);
     
   });
-  // })
 });
 
 
