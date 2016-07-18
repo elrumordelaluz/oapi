@@ -222,3 +222,18 @@
 .edit-icon__noResults.matched {
   display: block;
 }
+
+
+
+
+
+/* 
+*
+*  Overrides
+*  
+*/
+
+.bootstrap-tagsinput {
+  padding: 6px 10px;
+  width: 100%;
+}
