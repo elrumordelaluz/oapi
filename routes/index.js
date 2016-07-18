@@ -133,12 +133,10 @@ router.get('/admin', ensureAuthenticated, function(req, res, next) {
       next(err);
     }
     
-    // const icons = data.map(icn => icn.packageSlug)
     const icons = data.map(icn => ({
       packageSlug: icn.packageSlug,
       premium: icn.premium
     }));
-    
     
     const packs = icons.reduce((prev, next) => {
       return prev.hasOwnProperty(next.packageSlug) ? Object.assign({}, prev, {
@@ -153,15 +151,6 @@ router.get('/admin', ensureAuthenticated, function(req, res, next) {
         }
       })
     }, {})
-    
-    
-    // const packs = icons.reduce((prev, next) => {
-    //   return prev.hasOwnProperty(next) ? Object.assign({}, prev, {
-    //     [next]: prev[next] + 1
-    //   }) : Object.assign({}, prev, {
-    //     [next]: 1
-    //   });
-    // }, {})    
     
     res.render('Admin', { title, packs });
   });
