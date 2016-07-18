@@ -1,3 +1,15 @@
+const match = _.curry((what, str) => {
+  return str.match(what)
+})
+
+const filter = _.curry((f, arr) => {
+  return arr.filter(f)
+})
+
+const map = _.curry((f, arr) => {
+  return arr.map(f)
+})
+
 // Form Validation
 const uploadSingle = document.querySelectorAll('#upload-single');
 if (uploadSingle) {
@@ -18,63 +30,75 @@ if (deleteButtons) {
   });
 }
 
-// Search in Icons
-const search = document.querySelector('#search-icons');
-const showIconsContainer = document.querySelector('.edit-icon');
-const onlyPremium = document.querySelector('#edit-premium');
-const controlItems = (items, display) => {
-  items.forEach(item => item.style.display = display);
+
+// Search in Icon Results
+const inputFilter = document.querySelector('#search-icons')
+const inputPremium = document.querySelector('#edit-premium')
+const items = document.querySelectorAll('.edit-icon__item')
+const empty = document.querySelector('.edit-icon__noResults')
+const itemsArr = Array.from(items)
+const showItem = (item) => item.classList.add('matched')
+const hideItem = (item) => item.classList.remove('matched')
+
+// set attribute to base filter (ie. item.textContent)
+const getDataName = (item) => item.dataset.name
+const getDataSlug = (item) => item.dataset.slug
+const getTextContent = (item) => item.textContent
+const getID = (item) => item.id
+
+const getAttrs = (elem, arr) => arr.map(f => f(elem))
+const allAttrsFuncs = [getDataName,getDataSlug, getID]
+const getAllAttrs = (item) => getAttrs(item, allAttrsFuncs)
+
+const handleEmpty = (length) => {
+  if (length === 0) {
+    showItem(empty)
+  } else {
+    hideItem(empty)
+  }
 }
-const hideItems = (items) => controlItems(items, 'none');
-const showItems = (items) => controlItems(items, 'block');
 
 const doSearch = (value) => {
-  const term = value;
-  const allIcons = showIconsContainer.querySelectorAll('.edit-icon__item');
+  const term = new RegExp(value, 'i')
+  const hasTerm = match(term)
+  const onlySpecial = inputPremium.checked
   
-  const matchedAll = showIconsContainer.querySelectorAll(`[data-name*="${term}" i], [data-slug*="${term}" i]`);
-  const matchedWithPremium = showIconsContainer.querySelectorAll(`[data-name*="${term}" i][data-premium="true" i], [data-slug*="${term}" i][data-premium="true" i]`);
-  const matchedOnlyPremium = showIconsContainer.querySelectorAll(`[data-premium="true" i]`);
-  let matched;
-  
-  if (onlyPremium.checked) {
-    if (term.length === 0) {
-      matched = matchedOnlyPremium;
-    } else {
-      matched = matchedWithPremium;
-    }
-  } else {
-    matched = matchedAll;
+  const termAndSpecial = (item) => {
+    return hasTerm(getAllAttrs(item).join('')) && item.dataset.premium === 'true'
   }
   
-  const noResults = showIconsContainer.querySelector('.edit-icon__noResults');
-  
-  if (term !== '' || onlyPremium.checked) {
-    hideItems(Array.from(allIcons));
-    if (matched.length !== 0) {
-      showItems(Array.from(matched));
-      noResults.style.display = "none";
-    } else {
-      noResults.style.display = "block";
-    }
-  } else {
-    showItems(Array.from(allIcons));
+  const matchTermInAttrs = (item) => {
+    // could return only one attr like:
+    // return hasTerm(getDataAttr(item))
+    return onlySpecial 
+      ? termAndSpecial(item) 
+      : hasTerm(getAllAttrs(item).join(''))
   }
+  
+  const filterMatched = filter(matchTermInAttrs)
+  const matched = filterMatched(itemsArr)
+  
+  handleEmpty(matched.length)
+  map(hideItem)(itemsArr)
+  map(showItem)(matched)
 }
 
-if (search) {
-  const onlyPremium = document.querySelector('#edit-premium');
-  onlyPremium.addEventListener('change', () => doSearch(search.value) , false)
-  search.addEventListener('keyup', e => {
-    doSearch(e.target.value);
-    if (e.which === 27) {
-      search.value = '';
-      doSearch('');
-    }
-    if (e.which === 13) {
-      search.blur();
-    }
-  }, false);
+const searchHandler = (e) => {
+  doSearch(e.target.value)
+  if (e.which === 27) {
+    e.target.value = ''
+    doSearch('')
+  }
+}
+const specialHandler = () => doSearch(inputFilter.value)
+
+if (inputFilter) {
+  // Show all Items
+  inputFilter.focus()
+  hideItem(empty)
+  map(showItem)(itemsArr)
+  inputFilter.addEventListener('keyup', searchHandler, false)
+  inputPremium.addEventListener('change', specialHandler, false)
 }
   
   

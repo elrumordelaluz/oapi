@@ -185,7 +185,16 @@
   padding-right: .25rem;
   padding-left: .25rem;
   flex: 0 0 100%;
+  display: none;
 }
+
+.edit-icon__item.matched {
+  display: block;
+}
+
+
+
+
 
 @media (min-width: 40em) {
   .edit-icon__item {
@@ -208,4 +217,8 @@
   flex: 0 0 100%;
   max-width: 100%;
   display: none;
+}
+
+.edit-icon__noResults.matched {
+  display: block;
 }
