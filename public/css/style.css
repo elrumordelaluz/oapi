@@ -255,7 +255,13 @@
   display: block;
 }
 
-
+.badge-premium {
+  font-weight: normal;
+  padding: 3px 7px;
+  font-size: 12px;
+  margin-left: .5em;
+  vertical-align: middle;
+}
 
 
 

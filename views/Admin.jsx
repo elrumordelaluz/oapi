@@ -6,14 +6,29 @@ import UploadMultiple from './UploadMultiple';
 
 const Admin = (props) => {
   const packsKeys = Object.keys(props.packs);
-  const countIcons = (obj) => Object.keys(obj).reduce((prev, next) => {
-    return prev + obj[next];
+  const countTotalIcons = (obj) => Object.keys(obj).reduce((prev, next) => {
+    return prev + obj[next].icons;
   }, 0);
   
+  const countTotalPremium = (obj) => Object.keys(obj).reduce((prev, next) => {
+    return prev + obj[next].premium;
+  }, 0);
+  
+  const totalIcons = countTotalIcons(props.packs);
+  const totalPremium = countTotalPremium(props.packs);
+  
+  const getPercentage = (base, num) => {
+    return (num * 100 / base).toFixed(1)
+  }
   
   const renderPacks = () => packsKeys.map(pack => (
     <a className="list-group-item" key={pack} href={'/pack/' + pack}>{pack}{' '}
-      <span className="badge">{props.packs[pack]}</span>
+      <span className="label label-warning badge-premium pull-right">{props.packs[pack].premium} ({
+          getPercentage(props.packs[pack].icons, props.packs[pack].premium)
+        }%)</span>
+      <span className="badge">
+        {props.packs[pack].icons}
+      </span>
     </a>
   ));
   
@@ -34,7 +49,9 @@ const Admin = (props) => {
           </div>
         </div>
           
-        <p>Total Icons: <b>{ countIcons(props.packs) }</b></p>
+        <p>Total Icons: <b>{ totalIcons } <span className="label label-warning badge-premium">{ totalPremium } ({
+            getPercentage(totalIcons, totalPremium)
+          }%)</span></b></p>
       </div>
       
       <hr/>

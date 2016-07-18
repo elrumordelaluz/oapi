@@ -127,20 +127,41 @@ const countIconsInPack = (packageSlug, cb) => {
 }
 
 router.get('/admin', ensureAuthenticated, function(req, res, next) {
-  Icon.find({}, 'packageSlug', function(err, data) {
+  Icon.find({}, 'packageSlug premium', function(err, data) {
     if (err || data === null){
       var err = { status: 'ERROR', message: 'Could not find Icons' };
       next(err);
     }
     
-    const icons = data.map(icn => icn.packageSlug)
+    // const icons = data.map(icn => icn.packageSlug)
+    const icons = data.map(icn => ({
+      packageSlug: icn.packageSlug,
+      premium: icn.premium
+    }));
+    
+    
     const packs = icons.reduce((prev, next) => {
-      return prev.hasOwnProperty(next) ? Object.assign({}, prev, {
-        [next]: prev[next] + 1
+      return prev.hasOwnProperty(next.packageSlug) ? Object.assign({}, prev, {
+        [next.packageSlug]: {
+          icons: prev[next.packageSlug].icons + 1,
+          premium: next.premium ? prev[next.packageSlug].premium + 1 : prev[next.packageSlug].premium,
+        }
       }) : Object.assign({}, prev, {
-        [next]: 1
-      });
-    }, {})    
+        [next.packageSlug]: {
+          icons: 1,
+          premium: next.premium ? 1 : 0,
+        }
+      })
+    }, {})
+    
+    
+    // const packs = icons.reduce((prev, next) => {
+    //   return prev.hasOwnProperty(next) ? Object.assign({}, prev, {
+    //     [next]: prev[next] + 1
+    //   }) : Object.assign({}, prev, {
+    //     [next]: 1
+    //   });
+    // }, {})    
     
     res.render('Admin', { title, packs });
   });
