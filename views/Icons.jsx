@@ -19,7 +19,11 @@ const Icons = (props) => {
                 <span className="label label-warning">Premium</span>
               )}
             </h3>
-            <div className="btn-group" role="group">
+            <input type="checkbox" id={`select_${icon.iconSlug}`} />
+            <div className="btn-group form-inline" role="group">
+              <label className="btn btn-default" htmlFor={`select_${icon.iconSlug}`}>
+                Select
+              </label>
               <a href={`/edit/${icon.iconSlug}`} className="btn btn-default">Edit</a>
               <a 
                 href={`/delete/${icon.iconSlug}`} 
