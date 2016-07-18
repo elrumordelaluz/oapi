@@ -107,11 +107,20 @@ if (inputFilter) {
 const editIcon = document.querySelector('#edit-single-icon');
 if (editIcon) {
   const iconName = editIcon.querySelector('#iconName');
+  
+  const iconSlug = editIcon.querySelector('#iconSlug');
+  const iconSlugNoSuffix = editIcon.querySelector('#iconSlugNoSuffix');
+  $('#iconSlugNoSuffix').autoGrowInput({ comfortZone: 0 });
+  const iconOnlySuffix = editIcon.querySelector('#iconOnlySuffix');
+  const initialSlugNoSuffixValue = iconSlugNoSuffix.value;
+  iconSlug.value = initialSlugNoSuffixValue + iconOnlySuffix.value;
+  
   const iconStyle = editIcon.querySelector('#iconStyle');
   const iconTags = editIcon.querySelector('#iconTags');
   const iconPremiumTrue = editIcon.querySelector('#iconPremiumTrue');
   
   const getValues = () => ({
+    slug: iconSlug.value,
     name: iconName.value,
     style: iconStyle.value,
     premium: iconPremiumTrue.checked,
@@ -119,6 +128,15 @@ if (editIcon) {
   });
   
   const initValues = getValues();
+  
+  iconSlugNoSuffix.addEventListener('keyup', e => {
+    iconSlug.value = e.target.value + iconOnlySuffix.value;
+    if (e.target.value === '') {
+      iconSlugNoSuffix.value = initialSlugNoSuffixValue;
+      iconSlug.value = initialSlugNoSuffixValue + iconOnlySuffix.value;
+    }
+    // iconSlugNoSuffix.style.width = e.target.value.length + 'em';
+  }, false);
   
   editIcon.addEventListener('submit', e => {
     if (JSON.stringify(initValues) === JSON.stringify(getValues())) {

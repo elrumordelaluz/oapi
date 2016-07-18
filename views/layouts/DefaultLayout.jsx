@@ -25,6 +25,7 @@ class DefaultLayout extends Component {
           <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.15.0/jquery.validate.min.js"></script>
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+          <script src="/js/jquery.auto-grow-input.min.js"></script>
           <script src="/js/main.js"></script>
         </body>
       </html>

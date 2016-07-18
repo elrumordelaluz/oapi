@@ -5,6 +5,10 @@ import Element from './Element';
 const EditIcon = (props) => {
   const { icon } = props;
   const tags = icon.tags.join(", ");
+  const spl = icon.iconSlug.split('_')
+  const suffix = `_${spl[spl.length - 1]}`
+  const slugNoSuffix = icon.iconSlug.replace(suffix, '')
+  console.log(slugNoSuffix + suffix === icon.iconSlug);
   return (
     <DefaultLayout {...props}>
       <form action={`/edit/${icon.iconSlug}`} id="edit-single-icon" method="post">
@@ -28,6 +32,22 @@ const EditIcon = (props) => {
               </div>
               <div className="ae-grid__item item-sm-7">
                 <div className="form-group">
+                  <label htmlFor="iconSlugNoSuffix">Icon Slug</label>
+                  <label className="suffix-container">
+                    <input 
+                      type="text" 
+                      className="form-control suffix-input" 
+                      id="iconSlugNoSuffix" 
+                      name="iconSlugNoSuffix" 
+                      defaultValue={slugNoSuffix}
+                      placeholder={slugNoSuffix} 
+                      size={slugNoSuffix.length} />{suffix}
+                    <input type="hidden" name="iconOnlySuffix" id="iconOnlySuffix" defaultValue={suffix} />
+                    <input type="hidden" name="iconSlug" id="iconSlug" />
+                  </label>
+                </div>
+                
+                <div className="form-group">
                   <label htmlFor="iconName">Icon Name</label>
                   <input 
                     type="text" 
@@ -35,7 +55,7 @@ const EditIcon = (props) => {
                     id="iconName" 
                     name="iconName" 
                     defaultValue={icon.name}
-                    placeholder="Icon Name" />
+                    placeholder={icon.name}/>
                 </div>
                 
                 <div className="form-group">

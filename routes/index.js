@@ -29,9 +29,7 @@ router.use((req, res, next) => {
     if (err) { return next(err); }
     
     if (num) {
-      console.log('exists', num);
       req.suffix = num.val;
-      
       next()
     } else {
       const newMeta = new Meta({
@@ -349,6 +347,10 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   if (req.body.iconName) {
     dataToUpdate['name'] = req.body.iconName;
   }
+  
+  if (req.body.iconSlug) {
+    dataToUpdate['iconSlug'] = req.body.iconSlug;
+  }
 
   if (req.body.iconStyle) {
     dataToUpdate['style'] = req.body.iconStyle;
@@ -372,12 +374,9 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     }
 
     console.log('Icon updated!!');
-
-    res.render('EditIcon', {
-      title: `Icon :: ${title}`,
-      icon: data,
-      infos: ['Icon updated successfully!']
-    });
+    
+    req.flash('info', 'Icon updated successfully!');
+    res.redirect(`/edit/${data.iconSlug}`);
   })
 });
 

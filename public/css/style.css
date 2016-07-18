@@ -193,6 +193,38 @@
 }
 
 
+.suffix-container {
+  display: block;
+  font-weight: normal;
+  color: #ccc;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; 
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  padding-left: 12px;
+}
+
+.suffix-input {
+  color: #555;
+  display: inline-block;
+  width: auto;
+  max-width: 85%;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.suffix-input:focus,
+.suffix-input:active {
+  border: 0;
+  box-shadow: none;
+}
 
 
 
