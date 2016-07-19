@@ -23,9 +23,9 @@ const Admin = (props) => {
   
   const renderPacks = () => packsKeys.map(pack => (
     <a className="list-group-item" key={pack} href={'/pack/' + pack}>{pack}{' '}
-      <span className="label label-warning badge-premium pull-right">{props.packs[pack].premium} ({
+      <span className="label label-warning badge-premium pull-right"><b>{props.packs[pack].premium}</b> <small>/ {
           getPercentage(props.packs[pack].icons, props.packs[pack].premium)
-        }%)</span>
+        }%</small></span>
       <span className="badge">
         {props.packs[pack].icons}
       </span>
@@ -49,9 +49,10 @@ const Admin = (props) => {
           </div>
         </div>
           
-        <p>Total Icons: <b>{ totalIcons } <span className="label label-warning badge-premium">{ totalPremium } ({
+        <p>Total Icons: <b>{ totalIcons }</b> <span className="label label-warning badge-premium">
+          <b>{ totalPremium }</b> <small>/ {
             getPercentage(totalIcons, totalPremium)
-          }%)</span></b></p>
+          }%</small></span></p>
       </div>
       
       <hr/>
