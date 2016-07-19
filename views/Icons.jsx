@@ -12,6 +12,7 @@ const Icons = (props) => {
         data-premium={icon.premium}
         className="edit-icon__item">
         <div className="panel panel-default">
+          <input type="checkbox" className="select-input" id={`select_${icon.iconSlug}`} />
           <header className="panel-heading edit-icon__header">
             <h3 className="panel-title">
               {icon.iconSlug}{' '}
@@ -19,10 +20,9 @@ const Icons = (props) => {
                 <span className="label label-warning">Premium</span>
               )}
             </h3>
-            <input type="checkbox" id={`select_${icon.iconSlug}`} />
             <div className="btn-group form-inline" role="group">
-              <label className="btn btn-default" htmlFor={`select_${icon.iconSlug}`}>
-                Select
+              <label className="btn btn-default select-label" htmlFor={`select_${icon.iconSlug}`}>
+                select
               </label>
               <a href={`/edit/${icon.iconSlug}`} className="btn btn-default">Edit</a>
               <a 
@@ -81,8 +81,21 @@ const Icons = (props) => {
             className="form-control" 
             placeholder="Search" />
         </div>
+        
+        <form className="form-inline" id="bulkActions" action="/bulk">
+          <button className="btn btn-link" id="selectAll">Select</button>
+          <button className="btn btn-link" id="unselectAll">Unselect</button>{' '}
+          <select className="form-control" id="select-bulkAction" defaultValue="0">
+            <option value="0">Choose action...</option>
+            <option value="1">Set Premium</option>
+            <option value="3">Unset Premium</option>
+            <option value="2">Delete</option>
+          </select>{' '}
+          <button type="submit" className="btn btn-default">Apply</button>
+        </form>
+        
         <div>
-            <label className="edit-premium">
+          <label className="edit-premium">
             <input type="checkbox" id="edit-premium" /> Premium
           </label>
           <label htmlFor="edit-layout" className="edit-layout" />

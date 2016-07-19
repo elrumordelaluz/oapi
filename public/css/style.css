@@ -126,7 +126,8 @@
   margin-top: 0;
 }
 
-.edit-page__header .form-group {
+.edit-page__header .form-group,
+.edit-page__header .form-inline {
   margin-bottom: 5px;
 }
 
@@ -263,6 +264,27 @@
   vertical-align: middle;
 }
 
+.select-input {
+  display: none;
+}
+
+.select-input:checked + .edit-icon__header {
+  background-color: #777;
+  color: white;
+}
+
+.select-label {
+  text-transform: capitalize;
+}
+
+.select-input:checked + .edit-icon__header .select-label {
+  text-transform: lowercase;
+}
+
+.select-input:checked + .edit-icon__header .select-label:before {
+  content: 'un';
+  text-transform: capitalize;
+}
 
 
 /* 

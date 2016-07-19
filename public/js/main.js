@@ -92,6 +92,16 @@ const searchHandler = (e) => {
 }
 const specialHandler = () => doSearch(inputFilter.value)
 
+const bulkActions = document.querySelector('#bulkActions');
+const selectAllButton = document.querySelector('#selectAll');
+const unselectAllButton = document.querySelector('#unselectAll');
+const selectAction = document.querySelector('#select-bulkAction');
+const selectedInputs = document.querySelectorAll('.select-input');
+const selectItem = (item) => item.querySelector('.select-input').checked = true;
+const unselectItem = (item) => item.querySelector('.select-input').checked = false;
+const isSelected = (item) => item.checked;
+const getSelectID = (item) => getID(item).replace(/^select_/, '');
+
 if (inputFilter) {
   // Show all Items
   inputFilter.focus()
@@ -99,6 +109,52 @@ if (inputFilter) {
   map(showItem)(itemsArr)
   inputFilter.addEventListener('keyup', searchHandler, false)
   inputPremium.addEventListener('change', specialHandler, false)
+  
+  // Bulk Actions
+  selectAll.addEventListener('click', e => {
+    e.preventDefault();
+    map(selectItem)(itemsArr);
+  }, false);
+  unselectAll.addEventListener('click', e => {
+    e.preventDefault();
+    map(unselectItem)(itemsArr);
+  }, false);
+  
+  bulkActions.addEventListener('submit', e => {
+    const selectedItems = filter(isSelected)(Array.from(selectedInputs));
+    const selectedIDs = map(getSelectID)(selectedItems);
+    
+    if (selectedItems.length === 0 || selectAction.value === '0') {
+      e.preventDefault();
+    } else {
+      e.preventDefault();
+      let action, msg;
+      if (selectAction.value === '1') {
+        action = 'premium';
+        msg = `set ${selectedIDs.length} icons to Premium`;
+      } else if (selectAction.value === '2') {
+        action = 'delete';
+        msg = `DELETE ${selectedIDs.length} icons`;
+      } else if (selectAction.value === '3') {
+        action = 'nopremium';
+        msg = `unset ${selectedIDs.length} icons from Premium`;
+      }
+      
+      if (confirm(`Are you sure you want to ${msg}?`)) {
+        const posting = $.post('/bulk', { 
+          selected: selectedIDs,
+          action: action,
+        });
+        posting.done(data => {
+          if(data.ok){
+            setTimeout(() => {
+              window.location.reload();
+            }, 500); 
+          }
+        })
+      }
+    }
+  }, false);
 }
   
   

@@ -390,6 +390,40 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   })
 });
 
+router.post('/bulk', ensureAuthenticated, function(req, res, next) {
+  const selected = req.body['selected[]'];
+  const action = req.body.action;
+  
+  if (action === 'premium') {
+    Icon.update({'iconSlug': { $in: selected }}, { premium: true }, { multi: true }, (err, data) => {
+      if (err || data === null){
+        var err = { status: 'ERROR', message: 'Could not find Icons' };
+        next(err);
+      }
+      req.flash('info', `Set ${data.n} icons to Premium successfully!`);
+      res.json(data)
+    });
+  } else if (action === 'delete') {
+    Icon.remove({'iconSlug': { $in: selected }}, (err, data) => {
+      if (err || data === null){
+        var err = { status: 'ERROR', message: 'Could not find Icons' };
+        next(err);
+      }
+      req.flash('info', `Deleted ${data.result.n} icons successfully!`);
+      res.json(data)
+    });
+  } else if (action === 'nopremium') {
+    Icon.update({'iconSlug': { $in: selected }}, { premium: false }, { multi: true }, (err, data) => {
+      if (err || data === null){
+        var err = { status: 'ERROR', message: 'Could not find Icons' };
+        next(err);
+      }
+      req.flash('info', `Unset ${data.n} icons from Premium successfully!`);
+      res.json(data)
+    });
+  }
+});
+
 router.get('/undo', ensureAuthenticated, function(req, res, next) {
   const lastIcon = req.session.lastIcon;
   const undoneIcon = {
