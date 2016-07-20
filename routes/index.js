@@ -127,36 +127,59 @@ const countIconsInPack = (packageSlug, cb) => {
 }
 
 router.get('/admin', ensureAuthenticated, function(req, res, next) {
-  Meta.find({})
-  Icon.find({}, 'packageSlug premium', function(err, data) {
-    if (err || data === null){
-      var err = { status: 'ERROR', message: 'Could not find Icons' };
-      next(err);
-    }
+  Meta.findOne({ prop: 'suffix' }, (err, suffix) => {
+    if (err) { return next(err); }
     
-    const icons = data.map(icn => ({
-      packageSlug: icn.packageSlug,
-      premium: icn.premium
-    }));
-    
-    const packs = icons.reduce((prev, next) => {
-      return prev.hasOwnProperty(next.packageSlug) ? Object.assign({}, prev, {
-        [next.packageSlug]: {
-          icons: prev[next.packageSlug].icons + 1,
-          premium: next.premium ? prev[next.packageSlug].premium + 1 : prev[next.packageSlug].premium,
-        }
-      }) : Object.assign({}, prev, {
-        [next.packageSlug]: {
-          icons: 1,
-          premium: next.premium ? 1 : 0,
-        }
-      })
-    }, {})
-    
-    res.render('Admin', { title, packs });
+    Icon.find({}, 'packageSlug premium', function(err, data) {
+      if (err || data === null){
+        var err = { status: 'ERROR', message: 'Could not find Icons' };
+        next(err);
+      }
+      
+      const icons = data.map(icn => ({
+        packageSlug: icn.packageSlug,
+        premium: icn.premium
+      }));
+      
+      const packs = icons.reduce((prev, next) => {
+        return prev.hasOwnProperty(next.packageSlug) ? Object.assign({}, prev, {
+          [next.packageSlug]: {
+            icons: prev[next.packageSlug].icons + 1,
+            premium: next.premium ? prev[next.packageSlug].premium + 1 : prev[next.packageSlug].premium,
+          }
+        }) : Object.assign({}, prev, {
+          [next.packageSlug]: {
+            icons: 1,
+            premium: next.premium ? 1 : 0,
+          }
+        })
+      }, {})
+      
+      res.render('Admin', { title, packs, suffix: suffix.val });
+    });
   });
 });
 
+
+router.post('/update-suffix', ensureAuthenticated, function(req, res, next) {
+  const nat = (n) => n >= 0 && Math.floor(n) === +n;
+  
+  if (nat(req.body.suffixNumber)) {
+    Meta.findOneAndUpdate({ prop: 'suffix'}, { val: req.body.suffixNumber }, { new: true } , function(err, data){
+      if (err){
+        var error = {status:'ERROR', message: 'Error updating Suffix'};
+        return res.json(error);
+      }
+      // Suffix updated!
+      req.flash('info', `Suffix updated successfully!`);
+      res.redirect('/admin');
+    });
+  } else {
+    req.flash('error', `Not valid Suffix!`);
+    res.redirect('/admin');
+  }
+  
+});
 
 // router.get('/upload', ensureAuthenticated, function(req, res, next) {
 //   res.render('Upload', { title });
@@ -176,7 +199,7 @@ var upload = multer({ storage: storage })
 router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
   const count = req.suffix;
   const newCount = parseInt(count) + 1;
-  Meta.findOneAndUpdate({ prop: 'suffix'}, { val: newCount }, { new: true } , function(err,data){
+  Meta.findOneAndUpdate({ prop: 'suffix'}, { val: newCount }, { new: true } , function(err, data){
     if (err){
       var error = {status:'ERROR', message: 'Error updating Suffix'};
       return res.json(error);
@@ -233,7 +256,7 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
   const count = req.suffix;
   const files = req.files.length;
   const newCount = parseInt(count) + files;
-  Meta.findOneAndUpdate({ prop: 'suffix'}, { val: newCount }, { new: true } , function(err,data){
+  Meta.findOneAndUpdate({ prop: 'suffix'}, { val: newCount }, { new: true } , function(err, data){
     if (err){
       var error = {status:'ERROR', message: 'Error updating Suffix'};
       return res.json(error);
@@ -377,7 +400,7 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     dataToUpdate['tags'] = cleanTags;
   }
 
-  Icon.findOneAndUpdate({ iconSlug: requestedIcon}, dataToUpdate, { new: true } , function(err,data){
+  Icon.findOneAndUpdate({ iconSlug: requestedIcon}, dataToUpdate, { new: true } , function(err, data){
     // if err saving, respond back with error
     if (err){
       var error = {status:'ERROR', message: 'Error updating animal'};

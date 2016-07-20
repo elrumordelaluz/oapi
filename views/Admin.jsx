@@ -39,20 +39,46 @@ const Admin = (props) => {
         
         <hr/>
         
-        <p>Packs <span className="badge">{packsKeys.length}</span></p>
+        
         
         <div className="row">
           <div className="col-md-6">
+            <p>Packs <span className="badge">{packsKeys.length}</span></p>
             <ul className="list-group">
               { renderPacks() }
             </ul>
+            
+            <p>Total Icons: <b>{ totalIcons }</b> <span className="label label-warning badge-premium">
+              <b>{ totalPremium }</b> <small>/ {
+                getPercentage(totalIcons, totalPremium)
+              }%</small></span>
+            </p>
+          </div>
+          
+          <div className="col-md-6">
+            <p>Meta</p>
+            <form action="/update-suffix" id="update-suffix" className="form-inline" method="post">
+              <div className="form-group">
+                <label htmlFor="suffixNumber">Suffix</label> {' '}
+                <input 
+                  type="number" 
+                  className="form-control" 
+                  id="suffixNumber" 
+                  name="suffixNumber" 
+                  min="0"
+                  placeholder={props.suffix} 
+                  defaultValue={props.suffix}
+                  required />
+              </div>{' '}
+              <button 
+                className="btn btn-primary" 
+                id="suffixUpdateButton"
+                disabled>Update</button>
+            </form>
           </div>
         </div>
           
-        <p>Total Icons: <b>{ totalIcons }</b> <span className="label label-warning badge-premium">
-          <b>{ totalPremium }</b> <small>/ {
-            getPercentage(totalIcons, totalPremium)
-          }%</small></span></p>
+        
       </div>
       
       <hr/>

@@ -11,12 +11,36 @@ const map = _.curry((f, arr) => {
 })
 
 // Form Validation
-const uploadSingle = document.querySelectorAll('#upload-single');
+const uploadSingle = document.querySelector('#upload-single');
+const suffixUpdateButton = document.querySelector('#suffixUpdateButton');
+const suffixNumber = document.querySelector('#suffixNumber');
+const updateSuffixForm = document.querySelector('#update-suffix');
 if (uploadSingle) {
-   $('form').each(function() {  // attach to all form elements on page
+   $('form').each(function() {
     $(this).validate({});
   });
+  
+  const initSuffixValue = suffixNumber.value;
+  const handleUpdateButton = (e) => {
+    if (e.target.value !== initSuffixValue) {
+      suffixUpdateButton.disabled = false
+    } else {
+      suffixUpdateButton.disabled = true
+    }
+  }
+  
+  // suffixNumber.addEventListener('change', handleUpdateButton, false);
+  suffixNumber.addEventListener('keyup', handleUpdateButton, false);
+  
+  updateSuffixForm.addEventListener('submit', e => {
+    if (confirm(`Sure to modify the actual SUFFIX?`)) {
+      return true;
+    } else {
+      e.preventDefault();
+    }
+  })
 }
+
 
 // Delete Button
 const deleteButtons = document.querySelectorAll('.deleteIconButton');
