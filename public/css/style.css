@@ -258,6 +258,10 @@
   width: 20px;
 }
 
+.edit-icon__icon--small svg {
+  stroke-width: 3px;
+}
+
 .edit-icon__noResults {
   flex: 0 0 100%;
   max-width: 100%;
