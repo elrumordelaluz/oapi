@@ -353,11 +353,11 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
       next(err);
     }
 
-    // if (data.length === 0) {
-    //   req.flash('info', 'A package called ' + req.params.pack + ' seems empty.');
-    //   res.redirect('/admin');
-    //   return;
-    // }
+    if (data.length === 0) {
+      req.flash('info', 'A package called ' + req.params.pack + ' seems empty.');
+      res.redirect('/admin');
+      return;
+    }
 
     res.render('Icons', { title: `Icons :: ${title}`, icons: data, pack: req.params.pack });
   });
@@ -425,7 +425,7 @@ router.post('/bulk', ensureAuthenticated, function(req, res, next) {
         next(err);
       }
       req.flash('info', `Set ${data.n} icons to Premium successfully!`);
-      res.json(data)
+      res.json({ data })
     });
   } else if (action === 'delete') {
     Icon.find({'iconSlug': { $in: selected }})
@@ -438,17 +438,11 @@ router.post('/bulk', ensureAuthenticated, function(req, res, next) {
 
           req.session.lastMultipleIcons = orig;
           req.flash('info', `Deleted ${data.result.n} icons successfully! <a href="/undo-multiple">Undo?</a>`);
-          res.json(data)
+          countIconsInPack(orig[0].packageSlug, count => {
+            res.json({ data, count })
+          });
         });
       })
-    // Icon.remove({'iconSlug': { $in: selected }}, (err, data) => {
-    //   if (err || data === null){
-    //     var err = { status: 'ERROR', message: 'Could not find Icons' };
-    //     next(err);
-    //   }
-    //   req.flash('info', `Deleted ${data.result.n} icons successfully!`);
-    //   res.json(data)
-    // });
   } else if (action === 'nopremium') {
     Icon.update({'iconSlug': { $in: selected }}, { premium: false }, { multi: true }, (err, data) => {
       if (err || data === null){
@@ -456,7 +450,7 @@ router.post('/bulk', ensureAuthenticated, function(req, res, next) {
         next(err);
       }
       req.flash('info', `Unset ${data.n} icons from Premium successfully!`);
-      res.json(data)
+      res.json({ data })
     });
   }
 });

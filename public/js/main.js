@@ -169,10 +169,10 @@ if (inputFilter) {
           selected: selectedIDs,
           action: action,
         });
-        posting.done(data => {
-          if(data.ok){
+        posting.done(res => {
+          if(res.data.ok){
             setTimeout(() => {
-              window.location.reload();
+              res.count !== 0 ? window.location.reload() : window.location.href = '/admin';
             }, 500); 
           }
         })
