@@ -306,6 +306,25 @@
   text-transform: capitalize;
 }
 
+.backtotop-button {
+  width: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: fixed;
+  bottom: 1em;
+  right: 1.5em;
+  outline: 0;
+  display: block;
+  color: inherit;
+  transition: transform .3s;
+}
+
+.backtotop-button:hover {
+  transform: translateY(-.25em);
+  color: #777;
+}
+
 
 /* 
 *

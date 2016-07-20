@@ -128,6 +128,9 @@ const Icons = (props) => {
           </div>
         </div>
       </div>
+      <a href="#top" className="backtotop-button">
+        <svg viewBox="0 0 64 64"><path fill="currentColor" d="M43.2 38.1c-.6 0-1.1-.2-1.5-.7l-9.5-11.2-9.5 11.2c-.7.8-2 .9-2.8.2-.8-.7-.9-2-.2-2.8L32.2 20l12.5 14.8c.7.8.6 2.1-.2 2.8-.4.3-.9.5-1.3.5z"></path><path fill="currentColor" d="M32 64C14.4 64 0 49.6 0 32S14.4 0 32 0s32 14.4 32 32-14.4 32-32 32zm0-60C16.6 4 4 16.6 4 32s12.6 28 28 28 28-12.6 28-28S47.4 4 32 4z"></path></svg>
+      </a>
     </DefaultLayout>
   );
 }

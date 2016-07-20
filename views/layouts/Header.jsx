@@ -27,7 +27,7 @@ const Header = (props) => {
   );
 
   return (
-    <div>
+    <header id="top">
       <div className="navbar navbar-default navbar-static-top" role="navigation">
         <div className="container">
           <div className="navbar-header">
@@ -40,7 +40,7 @@ const Header = (props) => {
         { props.errors && props.errors.map(error => renderAlert('danger', error) )}
         { props.infos && props.infos.map(info => renderAlert('info', info) )}
       </div>
-    </div>
+    </header>
   );
 }
 
