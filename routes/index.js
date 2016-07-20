@@ -127,6 +127,7 @@ const countIconsInPack = (packageSlug, cb) => {
 }
 
 router.get('/admin', ensureAuthenticated, function(req, res, next) {
+  Meta.find({})
   Icon.find({}, 'packageSlug premium', function(err, data) {
     if (err || data === null){
       var err = { status: 'ERROR', message: 'Could not find Icons' };
@@ -304,22 +305,22 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
 });
 
 
-router.get('/icons', ensureAuthenticated, function(req, res) {
-  Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){
-    if(err || data === null){
-      var error = { status: 'ERROR', message: 'Could not find Icons' };
-      return res.json(error);
-    }
-
-    var jsonData = {
-      status: 'OK',
-      package: req.params.package,
-      icons: data
-    }
-
-    res.render('Icons', { title: `Icons :: ${title}`, icons: jsonData.icons });
-  });
-});
+// router.get('/icons', ensureAuthenticated, function(req, res) {
+//   Icon.find({ packageSlug: 'edition-stroke' }, null, { sort:{ iconSlug: 1 } }, function (err, data){
+//     if(err || data === null){
+//       var error = { status: 'ERROR', message: 'Could not find Icons' };
+//       return res.json(error);
+//     }
+// 
+//     var jsonData = {
+//       status: 'OK',
+//       package: req.params.package,
+//       icons: data
+//     }
+// 
+//     res.render('Icons', { title: `Icons :: ${title}`, icons: jsonData.icons });
+//   });
+// });
 
 
 router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
@@ -467,8 +468,8 @@ router.get('/undo', ensureAuthenticated, function(req, res, next) {
       icon: data
     }
     
-    req.flash('info', `Undone <a href="/edit/${undoneIcon.iconSlug}">${undoneIcon.name}</a> into <a href="/pack/${undoneIcon.packageSlug}">${undoneIcon.package}</a> pack successfully!`);
-    res.redirect(req.header('Referer'));
+    req.flash('info', `Undone <a href="/edit/${undoneIcon.iconSlug}">${undoneIcon.iconSlug}</a> into <a href="/pack/${undoneIcon.packageSlug}">${undoneIcon.package}</a> pack successfully!`);
+    res.redirect(`${req.header('Referer')}#${undoneIcon.iconSlug}`);
   });
 });
 

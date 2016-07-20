@@ -11,6 +11,7 @@ const Icons = (props) => {
     return (
       <div 
         key={icon.iconSlug}
+        id={icon.iconSlug}
         data-slug={icon.iconSlug} 
         data-name={icon.name} 
         data-premium={icon.premium}
@@ -22,7 +23,7 @@ const Icons = (props) => {
               <div className="edit-icon__icon--small">
                 <Element obj={icon.paths} />
               </div>
-              {icon.iconSlug}{' '}
+              <a href={`#${icon.iconSlug}`}>{icon.iconSlug}</a>{' '}
               { icon.premium && (
                 <span className="label label-warning">Premium</span>
               )}
@@ -79,7 +80,7 @@ const Icons = (props) => {
       <header className="edit-page__header">
         <h1>
           <a href="/admin" className="btn btn-info btn-xs">&lt;</a>{' '}
-          {mainTitle} 
+          {mainTitle} {' '}
           <small className="badge">{props.icons.length} icons</small>
           <span className="label label-warning badge-premium">
             <b>{premiumLength}</b>{' '}
