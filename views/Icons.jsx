@@ -15,6 +15,9 @@ const Icons = (props) => {
           <input type="checkbox" className="select-input" id={`select_${icon.iconSlug}`} />
           <header className="panel-heading edit-icon__header">
             <h3 className="panel-title">
+              <div className="edit-icon__icon--small">
+                <Element obj={icon.paths} />
+              </div>
               {icon.iconSlug}{' '}
               { icon.premium && (
                 <span className="label label-warning">Premium</span>
