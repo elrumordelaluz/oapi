@@ -276,6 +276,10 @@
   vertical-align: middle;
 }
 
+.badge-premium small {
+  color: inherit;
+}
+
 .select-input {
   display: none;
 }

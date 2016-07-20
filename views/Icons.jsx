@@ -3,6 +3,10 @@ import DefaultLayout from './layouts/DefaultLayout';
 import Element from './Element';
 
 const Icons = (props) => {
+  const premiumLength = props.icons.filter(icon => icon.premium === true).length;
+  const getPercentage = (base, num) => {
+    return (num * 100 / base).toFixed(1)
+  }
   const renderIcons = () => props.icons.map(icon => {
     return (
       <div 
@@ -75,7 +79,13 @@ const Icons = (props) => {
       <header className="edit-page__header">
         <h1>
           <a href="/admin" className="btn btn-info btn-xs">&lt;</a>{' '}
-          {mainTitle} <small className="badge">{props.icons.length} icons</small>
+          {mainTitle} 
+          <small className="badge">{props.icons.length} icons</small>
+          <span className="label label-warning badge-premium">
+            <b>{premiumLength}</b>{' '}
+            / {' '}{getPercentage(props.icons.length, premiumLength)}%
+          </span>
+        
         </h1>
         <div className="form-group">
           <input 
