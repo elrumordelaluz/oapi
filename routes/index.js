@@ -329,11 +329,11 @@ router.get('/pack/:pack', ensureAuthenticated, function(req, res, next) {
       next(err);
     }
 
-    if (data.length === 0) {
-      req.flash('info', 'A package called ' + req.params.pack + ' seems empty.');
-      res.redirect('/admin');
-      return;
-    }
+    // if (data.length === 0) {
+    //   req.flash('info', 'A package called ' + req.params.pack + ' seems empty.');
+    //   res.redirect('/admin');
+    //   return;
+    // }
 
     res.render('Icons', { title: `Icons :: ${title}`, icons: data, pack: req.params.pack });
   });
@@ -404,14 +404,27 @@ router.post('/bulk', ensureAuthenticated, function(req, res, next) {
       res.json(data)
     });
   } else if (action === 'delete') {
-    Icon.remove({'iconSlug': { $in: selected }}, (err, data) => {
-      if (err || data === null){
-        var err = { status: 'ERROR', message: 'Could not find Icons' };
-        next(err);
-      }
-      req.flash('info', `Deleted ${data.result.n} icons successfully!`);
-      res.json(data)
-    });
+    Icon.find({'iconSlug': { $in: selected }})
+      .then(orig => {
+        Icon.remove({'iconSlug': { $in: selected }}, (err, data) => {
+          if (err || data === null){
+            var err = { status: 'ERROR', message: 'Could not find Icons' };
+            next(err);
+          }
+
+          req.session.lastMultipleIcons = orig;
+          req.flash('info', `Deleted ${data.result.n} icons successfully! <a href="/undo-multiple">Undo?</a>`);
+          res.json(data)
+        });
+      })
+    // Icon.remove({'iconSlug': { $in: selected }}, (err, data) => {
+    //   if (err || data === null){
+    //     var err = { status: 'ERROR', message: 'Could not find Icons' };
+    //     next(err);
+    //   }
+    //   req.flash('info', `Deleted ${data.result.n} icons successfully!`);
+    //   res.json(data)
+    // });
   } else if (action === 'nopremium') {
     Icon.update({'iconSlug': { $in: selected }}, { premium: false }, { multi: true }, (err, data) => {
       if (err || data === null){
@@ -457,6 +470,38 @@ router.get('/undo', ensureAuthenticated, function(req, res, next) {
     req.flash('info', `Undone <a href="/edit/${undoneIcon.iconSlug}">${undoneIcon.name}</a> into <a href="/pack/${undoneIcon.packageSlug}">${undoneIcon.package}</a> pack successfully!`);
     res.redirect(req.header('Referer'));
   });
+});
+
+router.get('/undo-multiple', ensureAuthenticated, function(req, res, next) {
+  const getParams = (obj) => ({
+    name: obj.name,
+    packageSlug: obj.packageSlug,
+    iconSlug: obj.iconSlug,
+    library: obj.library,
+    package: obj.package,
+    style: obj.style,
+    tags: obj.tags,
+    premium: obj.premium,
+    paths: obj.paths,
+  });
+  const lastMultipleIcons = req.session.lastMultipleIcons.map(getParams);
+  
+  function handleInsert (err, icons) {
+    if (err) {
+      var error = { status:'ERROR', message: 'Error saving bulk Icons' };
+      return res.json(error);
+    } else {
+      var jsonData = {
+        status: 'OK',
+        icons: icons
+      }
+      
+      req.flash('info', `Undone deletion of ${icons.insertedCount} icons successfully!`);
+      res.redirect(req.header('Referer'));
+    }
+  }
+  
+  Icon.collection.insert(lastMultipleIcons, handleInsert);  
 });
 
 router.get('/delete/:icon', ensureAuthenticated, function(req, res, next) {
