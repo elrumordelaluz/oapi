@@ -41,6 +41,18 @@ router.use(function(req, res, next) {
   }
 });
 
+var fs = require('fs');
+var path = require('path');
+router.post('/generate', function (req, res) {
+  const file = path.join(__dirname, '../../uploads/') + req.body.name + '.svg';
+  const fileContent = req.body.code; 
+  fs.writeFile(file, fileContent, function(err) {
+    if (err) {
+      return console.log(err);
+    }
+    return res.download(file)
+  })
+});
 
 // /**
 //  * POST '/add'
