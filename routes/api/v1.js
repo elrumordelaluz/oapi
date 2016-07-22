@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+var tmp = require('tmp');
 
 var User = require("../../models/user.js");
 var Icon = require('../../models/icon');
@@ -41,17 +42,14 @@ router.use(function(req, res, next) {
   }
 });
 
-var fs = require('fs');
-var path = require('path');
-router.post('/generate', function (req, res) {
-  const file = path.join(__dirname, '../../uploads/') + req.body.name + '.svg';
-  const fileContent = req.body.code; 
-  fs.writeFile(file, fileContent, function(err) {
-    if (err) {
-      return console.log(err);
-    }
-    return res.download(file)
-  })
+ 
+router.post('/generate', function (req, res) {  
+  tmp.file(function _tempFileCreated(err, path, fd, cleanupCallback) {
+    if (err) throw err;
+   
+    return res.download(path)
+  });
+
 });
 
 // /**
