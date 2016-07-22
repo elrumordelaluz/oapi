@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
 var tmp = require('tmp');
 
 var User = require("../../models/user.js");
@@ -41,15 +42,15 @@ router.use(function(req, res, next) {
 
   }
 });
-
  
 router.post('/generate', function (req, res) {  
-  tmp.file(function _tempFileCreated(err, path, fd, cleanupCallback) {
-    if (err) throw err;
-   
-    return res.download(path)
+  tmp.file({ mode: 0644, prefix: 'prefix-', postfix: '.svg' }, function _tempFileCreated(err, path, fd) {
+    if (err) { return console.log(err) }
+    fs.writeFile(path, req.body.code, function(err) {
+      if (err) { return console.log(err) }
+      return res.download(path)
+    }); 
   });
-
 });
 
 // /**
