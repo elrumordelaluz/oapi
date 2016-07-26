@@ -53,7 +53,6 @@ router.post('/download-single', function (req, res) {
   tmp.file({ mode: 0644, prefix: 'icon-', postfix: '.svg' }, function _tempFileCreated(err, svgPath, fd) {
     if (err) { return console.log(err) }
     const basename = path.basename(svgPath, '.svg')
-    console.log(basename);
     
     fs.writeFile(svgPath, req.body.code, function(err) {
       if (err) { return console.log(err) }
@@ -63,7 +62,6 @@ router.post('/download-single', function (req, res) {
           if (err) throw err;
           svg2png.convert(svgPath, pngPath)
           .then(() => {
-            console.log(pngPath);
             return res.download(`${pngPath}/${basename}.png`)
           })
           cleanupCallback(); // Manual cleanup
