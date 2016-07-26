@@ -1,16 +1,14 @@
-var express = require('express');
-var router = express.Router();
-var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken');
-var fs = require('fs');
-var tmp = require('tmp');
+const express = require('express');
+const router = express.Router();
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const tmp = require('tmp');
+const svg2png = require('svg-to-png');
 
-var User = require("../../models/user.js");
-var Icon = require('../../models/icon');
-
-var toSlug = function (text) {
-  return text.toLowerCase().replace(/[^\w ]+/g,'').replace(/ +/g,'-')
-}
+const User = require("../../models/user.js");
+const Icon = require('../../models/icon');
 
 // route middleware to verify a token
 router.use(function(req, res, next) {
@@ -50,108 +48,35 @@ router.use(function(req, res, next) {
 //  * @param  {Object} req
 //  * @return {Object} Blob
 //  */
+
 router.post('/download-single', function (req, res) {  
-  tmp.file({ mode: 0644, prefix: 'prefix-', postfix: '.svg' }, function _tempFileCreated(err, path, fd) {
+  tmp.file({ mode: 0644, prefix: 'icon-', postfix: '.svg' }, function _tempFileCreated(err, svgPath, fd) {
     if (err) { return console.log(err) }
-    fs.writeFile(path, req.body.code, function(err) {
+    const basename = path.basename(svgPath, '.svg')
+    console.log(basename);
+    
+    fs.writeFile(svgPath, req.body.code, function(err) {
       if (err) { return console.log(err) }
-      return res.download(path)
+      
+      if (req.body.type === 'png') {
+        tmp.dir(function _tempDirCreated(err, pngPath, cleanupCallback) {
+          if (err) throw err;
+          svg2png.convert(svgPath, pngPath)
+          .then(() => {
+            console.log(pngPath);
+            return res.download(`${pngPath}/${basename}.png`)
+          })
+          cleanupCallback(); // Manual cleanup
+        });
+      } else {
+        return res.download(svgPath)
+      }
+      
     }); 
   });
 });
 
-// /**
-//  * POST '/add'
-//  * Receives a POST request of the new Icon, saves to db, responds back
-//  * @param  {Object} req. An object containing the different attributes of the Icon
-//  * @return {Object} JSON
-//  */
 
-router.post('/add', function(req, res){
-    // console.log(req.body);
-    var name = req.body.name,
-        package = req.body.package,
-        packageSlug = toSlug(package),
-        iconSlug = packageSlug + '__' + toSlug(name),
-        library = req.body.library,
-        type = req.body.type,
-        tags = req.body.tags.split(","),
-        paths = JSON.parse(req.body.paths),
-        premium = req.body.premium;
-
-    var iconObj = {
-      name: name,
-      package: package,
-      iconSlug: iconSlug,
-      packageSlug: packageSlug,
-      library: library,
-      type: type,
-      tags: tags,
-      paths: paths,
-      premium: premium
-    }
-
-    var icon = new Icon(iconObj);
-
-    // mongoose method, see http://mongoosejs.com/docs.html#model_Model-save
-    icon.save( function (err, data) {
-      if (err){
-        var error = { status:'ERROR', message: 'Error saving Icon' };
-        return res.json(error);
-      }
-
-      console.log('Icon saved!', 'name: ' + name, 'package: ' + package, '(' + iconSlug + ')');
-      // console.log(data);
-
-      // JSON data of the new Icon
-      var jsonData = {
-        status: 'OK',
-        icon: data
-      }
-      return res.json(jsonData);
-    })
-});
-
-
-function adaptBulkIcons (file) {
-  return file.icons.map(function (icon) {
-    // Transform `title` into `name`
-    icon.name = icon.title
-
-    // Create slugs
-    var packageSlug = toSlug(icon.package);
-    icon.packageSlug = packageSlug;
-    icon.iconSlug = packageSlug + '__' + toSlug(icon.title);
-
-    // Aditional params
-    icon.premium = false;
-    icon.tags = [];
-
-    // Remove `title`
-    delete icon.title;
-    // console.log(icon)
-
-    return icon;
-  })
-}
-
-router.post('/bulk', function(req, res){
-  // var iconsArray = adaptBulkIcons(editionFillFile);
-  Icon.collection.insert(iconsArray, handleInsert);
-  function handleInsert (err, icons) {
-    if (err) {
-      var error = { status:'ERROR', message: 'Error saving bulk Icons' };
-      return res.json(error);
-    } else {
-      var jsonData = {
-        status: 'OK',
-        icons: icons
-      }
-      console.info('%d Icons were successfully stored.', icons.length);
-      return res.json(jsonData);
-    }
-  }
-});
 
 
 
