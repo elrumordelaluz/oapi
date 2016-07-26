@@ -42,8 +42,15 @@ router.use(function(req, res, next) {
 
   }
 });
- 
-router.post('/generate', function (req, res) {  
+
+
+// /**
+//  * POST '/download-single'
+//  * Receives a POST request with code to generate a single SVG file to download\
+//  * @param  {Object} req
+//  * @return {Object} Blob
+//  */
+router.post('/download-single', function (req, res) {  
   tmp.file({ mode: 0644, prefix: 'prefix-', postfix: '.svg' }, function _tempFileCreated(err, path, fd) {
     if (err) { return console.log(err) }
     fs.writeFile(path, req.body.code, function(err) {
