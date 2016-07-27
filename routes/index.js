@@ -210,18 +210,21 @@ router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), fu
   fs.readFile(req.file.path, 'utf-8', function(err, data) {
     svgson(data, {
       svgo: true,
-      svgoPlugins: [
-        { removeStyleElement: true },
-        { removeAttrs: {
-            attrs: [
-              '(stroke-width|stroke-linecap|stroke-linejoin)',
-              'svg:id'
-            ]
-          }
-        },
-        { cleanupIDs: false },
-        { moveElemsAttrsToGroup: false },
-      ]
+      svgoConfig: {
+        multipass: true,
+        plugins: [
+          { removeStyleElement: true },
+          { removeAttrs: {
+              attrs: [
+                '(stroke-width|stroke-linecap|stroke-linejoin)',
+                'svg:id'
+              ]
+            }
+          },
+          { cleanupIDs: false },
+          { moveElemsAttrsToGroup: false },
+        ]
+      }
     }, function(result) {
       // Once processed newIcon with 'svgson'
       const newIcon = {
