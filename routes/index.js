@@ -274,18 +274,21 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
           svgo: true,
           title: file.originalname.substr(0, file.originalname.lastIndexOf(".")),
           pathsKey: 'paths',
-          svgoPlugins: [
-            { removeStyleElement: true },
-            { removeAttrs: {
-                attrs: [
-                  '(stroke-width|stroke-linecap|stroke-linejoin)',
-                  'svg:id'
-                ]
-              }
-            },
-            { cleanupIDs: false },
-            { moveElemsAttrsToGroup: false },
-          ]
+          svgoConfig: {
+            multipass: true,
+            plugins: [
+              { removeStyleElement: true },
+              { removeAttrs: {
+                  attrs: [
+                    '(stroke-width|stroke-linecap|stroke-linejoin)',
+                    'svg:id'
+                  ]
+                }
+              },
+              { cleanupIDs: false },
+              { moveElemsAttrsToGroup: false },
+            ]
+          }
         }, resolve);
       });
     });
@@ -304,7 +307,7 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
         package: req.body.iconPack,
         style: req.body.iconStyle,
         tags: [],
-        premium: false,
+        premium: req.body.iconPremium ? true : false,
         paths: icon.paths,
       };
     });

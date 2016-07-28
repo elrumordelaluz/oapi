@@ -58,6 +58,12 @@ const UploadMultiple = (props) => {
           <label htmlFor="iconLib">Library</label>
           <input type="text" id="iconLib" name="iconLib" className="form-control" defaultValue="The Icon Set" />
         </div>
+        
+        <div className="checkbox">
+          <label>
+            <input type="checkbox" name="iconPremium" value="isPremium" /> <b>Premium?</b>
+          </label>
+        </div>
 
         <button className="btn btn-primary">Upload</button>
       </form>
