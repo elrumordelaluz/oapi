@@ -200,6 +200,40 @@ if (editIcon) {
   const iconStyle = editIcon.querySelector('#iconStyle');
   const iconTags = editIcon.querySelector('#iconTags');
   const iconPremiumTrue = editIcon.querySelector('#iconPremiumTrue');
+  const iconCode = editIcon.querySelector('#iconCodeEditable')
+  const iconCodeContainer = editIcon.querySelector('#iconCodeContainer')
+  const iconCodeHidden = editIcon.querySelector('#iconCodeHidden')
+  
+  const isValidJSON = (str) => {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+  }
+  
+  const showValidSignal = (isValid) => {
+    if (isValid) {
+      iconCodeContainer.classList.add('valid');
+    } else {
+      iconCodeContainer.classList.remove('valid');
+    }
+  }
+  
+  const safeCodeToSubmit = (str) => {
+    if (isValidJSON(str)) {
+      iconCodeHidden.value = str;
+    }
+  }
+  
+  showValidSignal(isValidJSON(iconCode.innerText))
+  safeCodeToSubmit(iconCode.innerText)
+  
+  iconCode.addEventListener('input', e => {
+    showValidSignal(isValidJSON(e.target.innerText))
+    safeCodeToSubmit(e.target.innerText)
+  }, false)
   
   const getValues = () => ({
     slug: iconSlug.value,
@@ -207,6 +241,7 @@ if (editIcon) {
     style: iconStyle.value,
     premium: iconPremiumTrue.checked,
     tags: iconTags.value,
+    paths: iconCode.innerText
   });
   
   const initValues = getValues();
@@ -221,7 +256,8 @@ if (editIcon) {
   }, false);
   
   editIcon.addEventListener('submit', e => {
-    if (JSON.stringify(initValues) === JSON.stringify(getValues())) {
+    console.log(iconCodeHidden.value);
+    if (JSON.stringify(initValues) === JSON.stringify(getValues()) || !isValidJSON(iconCode.innerText)) {
       e.preventDefault();
     }
     return true;

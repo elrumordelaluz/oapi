@@ -104,11 +104,12 @@ const EditIcon = (props) => {
             
             <div className="ae-grid">
               <div className="ae-grid__item item-sm-12">
-                <pre className="IconCode">
-                  <code className="language-json">
+                <pre className="IconCode" id="iconCodeContainer">
+                  <code className="language-json" id="iconCodeEditable" contentEditable>
                     {JSON.stringify(icon.paths, null, 2)}
                   </code>
                 </pre>
+                <input type="hidden" id="iconCodeHidden" name="iconCodeHidden" />
               </div>
             </div>
           </div>

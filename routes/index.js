@@ -388,6 +388,10 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
   if (req.body.iconPremium) {
     dataToUpdate['premium'] = req.body.iconPremium;
   }
+  
+  if (req.body.iconCodeHidden) {
+    dataToUpdate['paths'] = JSON.parse(req.body.iconCodeHidden);
+  }
 
   if (req.body.iconTags) {
     var tags = req.body.iconTags.split(",");

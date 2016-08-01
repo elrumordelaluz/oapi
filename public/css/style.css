@@ -60,6 +60,34 @@
   flex: 1;
 }
 
+.IconCode {
+  position: relative;
+  /*border: 3px solid #905;*/
+}
+
+
+
+#iconCodeEditable {
+  outline: 0;
+}
+
+.IconCode.valid #iconCodeEditable:after {
+  content: 'Valid JSON Code';
+  background-color: #dff0d8;
+}
+
+#iconCodeEditable:after {
+  content: 'Invalid JSON Code';
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: .5em 1em;
+  background-color: #f2dede;
+  color: #333;
+  text-shadow: none;
+}
+
+
 .EditIconTitle {
   margin-bottom: 1em;
 }
