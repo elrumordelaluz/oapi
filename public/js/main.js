@@ -185,6 +185,8 @@ if (inputFilter) {
 
 // Edit icon
 const editIcon = document.querySelector('#edit-single-icon');
+const replaceFile = document.querySelector('#replace-file');
+
 if (editIcon) {
   const iconName = editIcon.querySelector('#iconName');
   
@@ -224,6 +226,14 @@ if (editIcon) {
     }
     return true;
   });
+  
+  replaceFile.addEventListener('submit', e => {
+    if (confirm(`Sure to replace the actual Icon (paths)?`)) {
+      return true;
+    } else {
+      e.preventDefault();
+    }
+  })
   
 }
 

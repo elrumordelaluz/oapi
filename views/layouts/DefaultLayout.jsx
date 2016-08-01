@@ -14,6 +14,7 @@ class DefaultLayout extends Component {
           <link rel="stylesheet" href="https://cdn.rawgit.com/bootstrap-tagsinput/bootstrap-tagsinput/master/dist/bootstrap-tagsinput.css"/>
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aurora-grid/1.0.6/aurora-grid.min.css"/>
           <link rel="stylesheet" href="/css/style.css"/>
+          <link rel="stylesheet" href="/css/prism.css"/>
         </head>
         <body>
           <Header {...this.props} />
@@ -26,6 +27,7 @@ class DefaultLayout extends Component {
           <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
           <script src="/js/jquery.auto-grow-input.min.js"></script>
+          <script src="/js/prism.js"></script>
           <script src="/js/main.js"></script>
         </body>
       </html>
