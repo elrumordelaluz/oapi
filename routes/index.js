@@ -13,7 +13,16 @@ var Meta = require('../models/meta');
 
 var router = express.Router();
 
-var h = require('../helpers/index');
+var slug = require('url-slug');
+
+const toSlug = (str) => {
+  return slug(str)
+}
+
+const unSlug = (str) => {
+  return slug.revert(slug.revert(str, '_'), '-', 'titlecase')
+}
+// var h = require('../helpers/index');
 
 const title = 'Orion API';
 const SVGO_CONFIG = {
@@ -234,8 +243,8 @@ router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), fu
       // Once processed newIcon with 'svgson'
       const newIcon = {
         name: req.body.iconName,
-        packageSlug: h.toSlug(req.body.iconPack),
-        iconSlug: `${h.toSlug(req.body.iconName)}_${newCount}`,
+        packageSlug: toSlug(req.body.iconPack),
+        iconSlug: `${toSlug(req.body.iconName)}_${newCount}`,
         library: req.body.iconLib,
         package: req.body.iconPack,
         style: req.body.iconStyle,
@@ -288,12 +297,12 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
   Promise.all(req.files.map(file => {
     return processSeparateFile(file);
   })).then(iconsArray => {
-    const packageSlug = h.toSlug(req.body.iconPack);
+    const packageSlug = toSlug(req.body.iconPack);
     const newIcons = iconsArray.map((icon, index) => {
       return {
-        name: icon.title,
+        name: unSlug(icon.title),
         packageSlug: packageSlug,
-        iconSlug: `${h.toSlug(icon.title)}_${parseInt(count) + index + 1}`,
+        iconSlug: `${toSlug(icon.title)}_${parseInt(count) + index + 1}`,
         library: req.body.iconLib,
         package: req.body.iconPack,
         style: req.body.iconStyle,
