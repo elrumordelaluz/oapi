@@ -118,6 +118,16 @@ const EditIcon = (props) => {
           </footer>
         </div>
       </form>
+      
+      <form action={`/replace/${icon.iconSlug}`} className="form-inline">
+        <div className="panel panel-danger">
+          <header className="panel-heading edit-icon__header">
+            <label className="panel-title" htmlFor="iconFile">Replace Icon File</label>
+            <input type="file" id="iconFile" name="iconFile" required />
+            <button className="btn btn-danger">Upload</button>
+          </header>
+        </div>
+      </form>
 
     </DefaultLayout>
   );
