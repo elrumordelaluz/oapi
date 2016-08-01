@@ -1,5 +1,11 @@
 import React from 'react';
 
+const TypeElem = (props) => {
+  return props.hasOwnProperty('text') 
+    ? <span>{ props.children }</span>
+    : <props.name {...props.attrs}>{ props.children }</props.name>
+}
+
 const Element = (props) => {
   const { obj } = props;
   let childnodes;
@@ -9,11 +15,11 @@ const Element = (props) => {
       ? obj.childs.map((node, index) => <Element obj={ node } key={ index } />)
       : obj.childs;
   }
-
+  
   return (
-    <obj.name {...obj.attrs}>
+    <TypeElem {...obj}>
       { childnodes }
-    </obj.name>
+    </TypeElem>
   );
 };
 

@@ -119,7 +119,12 @@ const EditIcon = (props) => {
         </div>
       </form>
       
-      <form action={`/replace/${icon.iconSlug}`} className="form-inline">
+      <form 
+        action={`/replace/${icon.iconSlug}`} 
+        className="form-inline" 
+        id="replace-file" 
+        method="post"
+        encType="multipart/form-data">
         <div className="panel panel-danger">
           <header className="panel-heading edit-icon__header">
             <label className="panel-title" htmlFor="iconFile">Replace Icon File</label>

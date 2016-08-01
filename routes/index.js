@@ -16,6 +16,23 @@ var router = express.Router();
 var h = require('../helpers/index');
 
 const title = 'Orion API';
+const SVGO_CONFIG = {
+  multipass: true,
+  plugins: [
+    { removeStyleElement: true },
+    { removeTitle: true },
+    { removeAttrs: {
+        attrs: [
+          '(stroke-width|stroke-linecap|stroke-linejoin)',
+          'svg:id',
+          'svg:data-name'
+        ]
+      }
+    },
+    { cleanupIDs: false },
+    { moveElemsAttrsToGroup: false },
+  ]
+};
 
 router.use(function(req, res, next) {
   res.locals.currentUser = req.user;
@@ -210,21 +227,7 @@ router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), fu
   fs.readFile(req.file.path, 'utf-8', function(err, data) {
     svgson(data, {
       svgo: true,
-      svgoConfig: {
-        multipass: true,
-        plugins: [
-          { removeStyleElement: true },
-          { removeAttrs: {
-              attrs: [
-                '(stroke-width|stroke-linecap|stroke-linejoin)',
-                'svg:id'
-              ]
-            }
-          },
-          { cleanupIDs: false },
-          { moveElemsAttrsToGroup: false },
-        ]
-      }
+      svgoConfig: SVGO_CONFIG
     }, function(result) {
       // Once processed newIcon with 'svgson'
       const newIcon = {
@@ -274,21 +277,7 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
           svgo: true,
           title: file.originalname.substr(0, file.originalname.lastIndexOf(".")),
           pathsKey: 'paths',
-          svgoConfig: {
-            multipass: true,
-            plugins: [
-              { removeStyleElement: true },
-              { removeAttrs: {
-                  attrs: [
-                    '(stroke-width|stroke-linecap|stroke-linejoin)',
-                    'svg:id'
-                  ]
-                }
-              },
-              { cleanupIDs: false },
-              { moveElemsAttrsToGroup: false },
-            ]
-          }
+          svgoConfig: SVGO_CONFIG
         }, resolve);
       });
     });
@@ -418,6 +407,30 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     req.flash('info', 'Icon updated successfully!');
     res.redirect(`/edit/${data.iconSlug}`);
   })
+});
+
+router.post('/replace/:icon', ensureAuthenticated, upload.single('iconFile'), function(req, res, next) {
+  const requestedIcon = req.params.icon;
+  
+  fs.readFile(req.file.path, 'utf-8', function(err, data) {
+    svgson(data, {
+      svgo: true,
+      svgoConfig: SVGO_CONFIG
+    }, function(result) {
+      // Once processed newIcon with 'svgson'
+      Icon.findOneAndUpdate({ iconSlug: requestedIcon}, { paths: result }, { new: true } , function(err, data){
+        // if err saving, respond back with error
+        if (err){
+          var error = {status:'ERROR', message: 'Error editing Icon'};
+          return res.json(error);
+        }
+        console.log('Icon File Replaced!!');
+        req.flash('info', 'Icon File replaced successfully!');
+        res.redirect(`/edit/${data.iconSlug}`);
+      })
+      
+    });
+  });
 });
 
 router.post('/bulk', ensureAuthenticated, function(req, res, next) {
