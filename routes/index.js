@@ -25,7 +25,9 @@ const SVGO_CONFIG = {
         attrs: [
           '(stroke-width|stroke-linecap|stroke-linejoin)',
           'svg:id',
-          'svg:data-name'
+          'svg:data-name',
+          'svg:width',
+          'svg:height'
         ]
       }
     },
