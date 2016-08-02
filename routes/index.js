@@ -5,7 +5,6 @@ var jwt = require('jsonwebtoken');
 var multer  = require('multer');
 
 const svgson = require('svgson');
-// const fs = require('fs');
 const fs = require('fs-promise');
 
 var Icon = require('../models/icon');
@@ -15,16 +14,11 @@ var router = express.Router();
 
 var slug = require('url-slug');
 
-const toSlug = (str) => {
-  return slug(str)
-}
-
-const unSlug = (str) => {
-  return slug.revert(slug.revert(str, '_'), '-', 'titlecase')
-}
-// var h = require('../helpers/index');
+const toSlug = (str) => slug(str);
+const unSlug = (str) => slug.revert(slug.revert(str, '_'), '-', 'titlecase');
 
 const title = 'Orion API';
+
 const SVGO_CONFIG = {
   multipass: true,
   plugins: [
