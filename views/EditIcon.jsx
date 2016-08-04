@@ -110,6 +110,7 @@ const EditIcon = (props) => {
                   </code>
                 </pre>
                 <input type="hidden" id="iconCodeHidden" name="iconCodeHidden" />
+                <input type="hidden" id="iconCodeIsChanged" name="iconCodeIsChanged" value="0" />
               </div>
             </div>
           </div>

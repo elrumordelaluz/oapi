@@ -203,6 +203,7 @@ if (editIcon) {
   const iconCode = editIcon.querySelector('#iconCodeEditable')
   const iconCodeContainer = editIcon.querySelector('#iconCodeContainer')
   const iconCodeHidden = editIcon.querySelector('#iconCodeHidden')
+  const iconCodeIsChanged = editIcon.querySelector('#iconCodeIsChanged')
   
   const isValidJSON = (str) => {
     try {
@@ -256,7 +257,9 @@ if (editIcon) {
   }, false);
   
   editIcon.addEventListener('submit', e => {
-    console.log(iconCodeHidden.value);
+    if (JSON.stringify(initValues.paths) !== JSON.stringify(getValues().paths)) {
+      iconCodeIsChanged.value = '1';
+    }
     if (JSON.stringify(initValues) === JSON.stringify(getValues()) || !isValidJSON(iconCode.innerText)) {
       e.preventDefault();
     }

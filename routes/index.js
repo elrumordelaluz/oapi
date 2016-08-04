@@ -394,7 +394,7 @@ router.post('/edit/:icon', ensureAuthenticated, function(req, res, next) {
     dataToUpdate['premium'] = req.body.iconPremium;
   }
   
-  if (req.body.iconCodeHidden) {
+  if (req.body.iconCodeHidden && req.body.iconCodeIsChanged === '1') {
     dataToUpdate['paths'] = JSON.parse(req.body.iconCodeHidden);
   }
 
