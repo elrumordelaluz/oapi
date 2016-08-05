@@ -10,6 +10,10 @@ const svg2png = require('svg-to-png');
 const User = require("../../models/user.js");
 const Icon = require('../../models/icon');
 
+const JSZip = require('jszip');
+var slug = require('url-slug');
+
+
 // route middleware to verify a token
 router.use(function(req, res, next) {
 
@@ -75,6 +79,37 @@ router.post('/download-single', function (req, res) {
 });
 
 
+router.post('/generate-pack', function(req, res) {
+  const zip = new JSZip();
+  zip.file('index.html', req.body.demo);
+  zip.file('sprite.svg', req.body.sprite);
+  const timestamp = Date.now();
+  const fileName = `${slug(req.body.name)}_${timestamp}`;
+  zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
+    .pipe(fs.createWriteStream(`./downloads/${fileName}.zip`))
+    .on('finish', function () {
+        console.log("out.zip written.");
+        res.json({
+          status: 'ok',
+          url: `${fileName}.zip`,
+        })
+    });
+});
+
+
+router.get('/download-pack', function(req, res) {
+  const filePath = path.resolve(__dirname,'../../downloads', req.query.name);
+  fs.stat(filePath, function(err, stats) {
+    if (err) { console.log('error') }
+    res.sendfile(filePath, function(err) {
+      if (err) { 
+        console.log('error') 
+      } else {
+        fs.unlink(filePath);
+      } 
+    });
+  })
+});
 
 
 
