@@ -88,7 +88,7 @@ router.post('/generate-pack', function(req, res) {
   zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
     .pipe(fs.createWriteStream(`./downloads/${fileName}.zip`))
     .on('finish', function () {
-        console.log("out.zip written.");
+        console.log(`${fileName}.zip`);
         res.json({
           status: 'ok',
           url: `${fileName}.zip`,
