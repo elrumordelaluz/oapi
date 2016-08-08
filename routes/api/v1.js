@@ -101,7 +101,7 @@ router.get('/download-pack', function(req, res) {
   const filePath = path.resolve(__dirname,'../../downloads', req.query.name);
   fs.stat(filePath, function(err, stats) {
     if (err) { console.log('error') }
-    res.sendfile(filePath, function(err) {
+    res.sendFile(filePath, function(err) {
       if (err) { 
         console.log('error') 
       } else {
