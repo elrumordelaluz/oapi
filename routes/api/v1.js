@@ -81,17 +81,17 @@ router.post('/download-single', function (req, res) {
 
 router.post('/generate-pack', function(req, res) {
   const zip = new JSZip();
-  zip.file('index.html', req.body.demo);
-  zip.file('sprite.svg', req.body.sprite);
+  zip.file('demo.html', req.body.demo);
+  zip.file(`${req.body.fileName}.svg`, req.body.sprite);
   const timestamp = Date.now();
-  const fileName = `${slug(req.body.name)}_${timestamp}`;
+  const zipName = `${slug(req.body.name)}_${timestamp}`;
   zip.generateNodeStream({type:'nodebuffer',streamFiles:true})
-    .pipe(fs.createWriteStream(`./downloads/${fileName}.zip`))
+    .pipe(fs.createWriteStream(`./downloads/${zipName}.zip`))
     .on('finish', function () {
-        console.log(`${fileName}.zip`);
+        console.log(`${zipName}.zip`);
         res.json({
           status: 'ok',
-          url: `${fileName}.zip`,
+          url: `${zipName}.zip`,
         })
     });
 });
