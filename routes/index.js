@@ -19,6 +19,33 @@ const unSlug = (str) => slug.revert(slug.revert(str, '_'), '-', 'titlecase');
 
 const title = 'Orion API';
 
+const doSVGOConfig = (isColor) => {
+  var attrs = [
+    'svg:id',
+    'svg:data-name',
+    'svg:width',
+    'svg:height'
+  ];
+  
+  if (!isColor) {
+    attrs.concat = ['(stroke-width|stroke-linecap|stroke-linejoin)']
+  }
+  
+  return {
+    multipass: true,
+    plugins: [
+      { removeStyleElement: true },
+      { removeTitle: true },
+      { removeAttrs: {
+          attrs: attrs
+        }
+      },
+      { cleanupIDs: false },
+      { moveElemsAttrsToGroup: false },
+    ],
+  }
+}
+
 const SVGO_CONFIG = {
   multipass: true,
   plugins: [
@@ -232,7 +259,7 @@ router.post('/upload-single', ensureAuthenticated, upload.single('iconFile'), fu
   fs.readFile(req.file.path, 'utf-8', function(err, data) {
     svgson(data, {
       svgo: true,
-      svgoConfig: SVGO_CONFIG
+      svgoConfig: doSVGOConfig(req.body.iconStyle === 'color')
     }, function(result) {
       // Once processed newIcon with 'svgson'
       const newIcon = {
@@ -282,7 +309,7 @@ router.post('/upload-multiple', ensureAuthenticated, upload.array('multipleIconF
           svgo: true,
           title: file.originalname.substr(0, file.originalname.lastIndexOf(".")),
           pathsKey: 'paths',
-          svgoConfig: SVGO_CONFIG
+          svgoConfig: doSVGOConfig(req.body.iconStyle === 'color')
         }, resolve);
       });
     });
@@ -424,7 +451,8 @@ router.post('/replace/:icon', ensureAuthenticated, upload.single('iconFile'), fu
   fs.readFile(req.file.path, 'utf-8', function(err, data) {
     svgson(data, {
       svgo: true,
-      svgoConfig: SVGO_CONFIG
+      svgoConfig: doSVGOConfig(req.body.iconStyleWhenReplacingFile === 'color')
+      // svgoConfig: SVGO_CONFIG
     }, function(result) {
       // Once processed newIcon with 'svgson'
       Icon.findOneAndUpdate({ iconSlug: requestedIcon}, { paths: result }, { new: true } , function(err, data){
