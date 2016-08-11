@@ -24,7 +24,8 @@ const doSVGOConfig = (isColor) => {
     'svg:id',
     'svg:data-name',
     'svg:width',
-    'svg:height'
+    'svg:height',
+    'style',
   ];
   
   if (!isColor) {
