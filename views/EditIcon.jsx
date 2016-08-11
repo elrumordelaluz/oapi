@@ -67,6 +67,7 @@ const EditIcon = (props) => {
                     value={icon.style}>
                     <option value="stroke">Stroke</option>
                     <option value="fill">Fill</option>
+                    <option value="color">Color</option>
                   </select>
                 </div>
                 
@@ -131,6 +132,7 @@ const EditIcon = (props) => {
           <header className="panel-heading edit-icon__header">
             <label className="panel-title" htmlFor="iconFile">Replace Icon File</label>
             <input type="file" id="iconFile" name="iconFile" required />
+            <input type="hidden" id="iconStyleWhenReplacingFile" name="iconStyleWhenReplacingFile" value={icon.style} />
             <button className="btn btn-danger">Upload</button>
           </header>
         </div>

@@ -52,6 +52,12 @@ const UploadMultiple = (props) => {
               Filled
             </label>
           </div>
+          <div className="radio">
+            <label>
+              <input type="radio" name="iconStyle" id="iconStyleColor" value="color" />
+              Colored
+            </label>
+          </div>
         </div>
         
         <div className="form-group">
