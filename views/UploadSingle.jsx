@@ -48,19 +48,19 @@ const UploadSingle = (props) => {
           <div className="radio">
             <label>
               <input type="radio" name="iconStyle" id="iconStyleStroke" value="stroke" defaultChecked />
-              Stroked
+              Line
             </label>
           </div>
           <div className="radio">
             <label>
               <input type="radio" name="iconStyle" id="iconStyleFill" value="fill" />
-              Filled
+              Solid
             </label>
           </div>
           <div className="radio">
             <label>
               <input type="radio" name="iconStyle" id="iconStyleColor" value="color" />
-              Colored
+              Color
             </label>
           </div>
         </div>
