@@ -26,6 +26,9 @@ const Icons = (props) => {
               <a href={`#${icon.iconSlug}`}>{icon.iconSlug}</a>{' '}
               { icon.premium && (
                 <span className="label label-warning">Premium</span>
+              )} {' '}
+              { icon.tags.length > 0 && (
+                <span className="label label-info">tags</span>
               )}
             </h3>
             <div className="btn-group form-inline" role="group">
